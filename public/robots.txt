@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wschwab.xyz/sitemap-index.xml

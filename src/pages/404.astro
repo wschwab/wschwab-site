@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="404">
+  <main>
+    <div class="page">
+      <div class="terminal">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <div class="line"><span class="ps">ws@ethereum:~$</span> cat <span id="path"></span></div>
+        <div class="line">&nbsp;&nbsp;cat: no such file or directory</div>
+        <div class="line"><span class="ps">ws@ethereum:~$</span> cd <a href="/">~</a></div>
+        <div class="line"><span class="ps">ws@ethereum:~$</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    document.getElementById('path')!.textContent = location.pathname;
+  </script>
+</Base>

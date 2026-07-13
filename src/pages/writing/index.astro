@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const all = await getCollection('writing', (e) => !e.data.draft);
+const byDate = (a: typeof all[number], b: typeof all[number]) =>
+  (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0);
+const main = all.filter((e) => e.data.archive_section === 'main').sort(byDate);
+const older = all.filter((e) => e.data.archive_section === 'older').sort(byDate);
+const fmt = (d?: Date) =>
+  d ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+---
+<Base title="Writing" description="Essays and technical writing by William Schwab — on Substack, Mirror, and Medium.">
+  <main>
+    <div class="page">
+      <div class="page-head">
+        <a class="backlink" href="/#writing">← back home</a>
+        <h1>The <em>archive.</em></h1>
+        <hr>
+      </div>
+      <div class="essays">
+        {main.map((e) => (
+          <a class="essay" href={e.data.url}>
+            <div class="kind">{e.data.kind}</div>
+            <h3>{e.data.title}</h3>
+            <p>{e.data.summary}</p>
+            {e.data.date && <span class="date">{fmt(e.data.date)}</span>}
+          </a>
+        ))}
+      </div>
+      {older.length > 0 && (
+        <>
+          <div class="archive-sep">Older &amp; assorted</div>
+          <div class="essays">
+            {older.map((e) => (
+              <a class="essay" href={e.data.url}>
+                <div class="kind">{e.data.kind}</div>
+                <h3>{e.data.title}</h3>
+                <p>{e.data.summary}</p>
+                {e.data.date && <span class="date">{fmt(e.data.date)}</span>}
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  </main>
+</Base>

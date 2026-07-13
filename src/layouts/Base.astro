@@ -1,0 +1,59 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title,
+  description = 'William Schwab — smart contract developer and engineering leader. Nine years across the Ethereum ecosystem: protocol engineering, governance, coordination.',
+} = Astro.props;
+const pageTitle = title ? `${title} — William Schwab` : 'William Schwab';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{pageTitle}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonical}>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="sitemap" href="/sitemap-index.xml">
+  <meta property="og:title" content={pageTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:image" content={new URL('/og.png', Astro.site)}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@wschwab_">
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/#top">ws<span>@ethereum:~$</span></a>
+    <ul>
+      <li><a href="/#about">about</a></li>
+      <li><a href="/#work">work</a></li>
+      <li><a href="/#writing">writing</a></li>
+      <li><a href="/#contact">contact</a></li>
+    </ul>
+  </nav>
+  <slot />
+  <footer>
+    <span class="tip">*tips hat*</span> &nbsp;·&nbsp;
+    <a href="https://github.com/wschwab" rel="me">github</a> &nbsp;·&nbsp;
+    <a href="https://x.com/wschwab_" rel="me">twitter</a>
+  </footer>
+  <script>
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  </script>
+</body>
+</html>
