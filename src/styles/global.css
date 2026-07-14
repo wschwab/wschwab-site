@@ -131,6 +131,7 @@ h2.title em{color:var(--amber-bright);font-style:italic}
 .terminal .ps{color:var(--amber)}
 .terminal a{color:var(--cyan);border-bottom:1px dotted rgba(92,214,232,.4);transition:color .25s}
 .terminal a:hover{color:var(--amber-bright);border-color:var(--amber)}
+.copy-ok{color:var(--muted);opacity:.8;font-size:.92em}
 .terminal .cursor{display:inline-block;width:.55em;height:1.05em;background:var(--amber);vertical-align:text-bottom;
   animation:blink 1.1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}

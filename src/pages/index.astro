@@ -146,7 +146,7 @@ const substack = await latestSubstackPost();
         <div class="line">&nbsp;&nbsp;github&nbsp;&nbsp;&nbsp;&nbsp;→ <a href="https://github.com/wschwab" rel="me">github.com/wschwab</a></div>
         <div class="line">&nbsp;&nbsp;twitter&nbsp;&nbsp;&nbsp;→ <a href="https://x.com/wschwab_" rel="me">@wschwab_</a></div>
         <div class="line">&nbsp;&nbsp;substack&nbsp;&nbsp;→ <a href="https://wschwab.substack.com">wschwab.substack.com</a></div>
-        <div class="line">&nbsp;&nbsp;email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <a id="em" href="#contact">w.s.schwab4 [at] gmail [dot] com</a></div>
+        <div class="line">&nbsp;&nbsp;email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <a id="em" href="#contact" title="click to copy">w.s.schwab4 [at] gmail [dot] com</a><span id="em-ok" class="copy-ok"></span></div>
         <div class="line"><span class="ps">ws@ethereum:~$</span> credits</div>
         <div class="line">&nbsp;&nbsp;human&nbsp;→ wschwab</div>
         <div class="line">&nbsp;&nbsp;agent&nbsp;→ Fable (Claude) — <em>*tips hat back*</em></div>
@@ -156,11 +156,17 @@ const substack = await latestSubstackPost();
   </main>
 
   <script>
-    // assemble the mailto client-side so the address never appears in the HTML
+    // assemble the address client-side; no mailto anywhere — click copies instead
     const em = document.getElementById('em') as HTMLAnchorElement;
-    const addr = ['w.s', 'schwab4'].join('.') + '@' + ['gmail', 'com'].join('.');
-    em.href = 'mailto:' + addr;
+    const emOk = document.getElementById('em-ok')!;
+    const addr = ['w.s', 'schwab4'].join('.') + String.fromCharCode(64) + ['gmail', 'com'].join('.');
     em.textContent = addr;
+    em.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await navigator.clipboard.writeText(addr);
+      emOk.textContent = ' # copied to clipboard';
+      setTimeout(() => (emOk.textContent = ''), 2000);
+    });
   </script>
   <script>
     (function () {
