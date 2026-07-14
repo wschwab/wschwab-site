@@ -47,6 +47,24 @@ else
   fail=1
 fi
 
+step "on-chain pointer (WNS/GNS)"
+# gwei.domains/wei.domains gateways only resolve raw IPFS contenthash (not IPNS),
+# so each new CID needs a signed setContenthash. Emit ready-to-sign calldata.
+if [ -n "${cid:-}" ]; then
+  hex=$(ipfs cid format -b base16 "$cid"); hex=${hex#f}
+  ch="e301${hex}"
+  chlen=$(printf '%064x' $((${#ch} / 2)))
+  pad=$(python3 -c "print('00'*((32-${#ch}//2%32)%32))")
+  WNS_ID=ffd9adc3e2f54454dd438f3fb01dfd095b8828510322d94f2d4fd13a50a8f4b1
+  GNS_ID=ce9fee42672fc9e9a17521f8098347751c225591c1e530bfe16bd6a3f476bbea
+  off=$(printf '%064x' 64)
+  echo "if publishing on-chain, send from the name-owner wallet:"
+  echo "  WNS 0x0000000000696760E15f265e828DB644A0c242EB:"
+  echo "  0x88f97a67${WNS_ID}${off}${chlen}${ch}${pad}"
+  echo "  GNS 0x9D51D507bC7264d4fe8AD1cF7fe191933a0A81D6:"
+  echo "  0x88f97a67${GNS_ID}${off}${chlen}${ch}${pad}"
+fi
+
 # step "pin: Swarm"  — deferred; requires a funded bee node (postage stamps)
 
 step "done"
