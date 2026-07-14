@@ -9,11 +9,12 @@ fail=0
 step() { printf '\n\033[33m── %s\033[0m\n' "$1"; }
 
 step "jj: commit + advance main"
-if ! jj commit -m "$msg" 2>/dev/null; then
-  # working copy may be empty (nothing new to commit) — still allow re-push/pin
-  echo "nothing to commit (working copy empty); continuing with push + pin"
+if [ -n "$(jj diff --name-only)" ]; then
+  jj commit -m "$msg" || exit 1
+  jj bookmark set main -r @- || { echo "bookmark set failed"; exit 1; }
+else
+  echo "nothing to commit (working copy clean); continuing with push + pin"
 fi
-jj bookmark set main -r @- --allow-backwards || { echo "bookmark set failed"; exit 1; }
 
 step "push: GitHub (origin) — triggers Cloudflare deploy"
 jj git push --bookmark main || fail=1
