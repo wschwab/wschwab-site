@@ -146,7 +146,7 @@ const substack = await latestSubstackPost();
         <div class="line">&nbsp;&nbsp;github&nbsp;&nbsp;&nbsp;&nbsp;→ <a href="https://github.com/wschwab" rel="me">github.com/wschwab</a></div>
         <div class="line">&nbsp;&nbsp;twitter&nbsp;&nbsp;&nbsp;→ <a href="https://x.com/wschwab_" rel="me">@wschwab_</a></div>
         <div class="line">&nbsp;&nbsp;substack&nbsp;&nbsp;→ <a href="https://wschwab.substack.com">wschwab.substack.com</a></div>
-        <div class="line">&nbsp;&nbsp;email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <a href="mailto:w.s.schwab4@gmail.com">w.s.schwab4@gmail.com</a></div>
+        <div class="line">&nbsp;&nbsp;email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <a id="em" href="#contact">w.s.schwab4 [at] gmail [dot] com</a></div>
         <div class="line"><span class="ps">ws@ethereum:~$</span> credits</div>
         <div class="line">&nbsp;&nbsp;human&nbsp;→ wschwab</div>
         <div class="line">&nbsp;&nbsp;agent&nbsp;→ Fable (Claude) — <em>*tips hat back*</em></div>
@@ -155,6 +155,13 @@ const substack = await latestSubstackPost();
     </section>
   </main>
 
+  <script>
+    // assemble the mailto client-side so the address never appears in the HTML
+    const em = document.getElementById('em') as HTMLAnchorElement;
+    const addr = ['w.s', 'schwab4'].join('.') + '@' + ['gmail', 'com'].join('.');
+    em.href = 'mailto:' + addr;
+    em.textContent = addr;
+  </script>
   <script>
     (function () {
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
