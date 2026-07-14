@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# commit "<message>" — describe with jj, push to GitHub + Radicle, pin to IPFS/IPNS.
+# Cloudflare deploys via GitHub Actions on push; this script handles the mirrors.
+set -uo pipefail
+cd "$(dirname "$0")"
+
+msg="${1:?usage: ./commit \"message\"}"
+fail=0
+step() { printf '\n\033[33m── %s\033[0m\n' "$1"; }
+
+step "jj: commit + advance main"
+if ! jj commit -m "$msg" 2>/dev/null; then
+  # working copy may be empty (nothing new to commit) — still allow re-push/pin
+  echo "nothing to commit (working copy empty); continuing with push + pin"
+fi
+jj bookmark set main -r @- --allow-backwards || { echo "bookmark set failed"; exit 1; }
+
+step "push: GitHub (origin) — triggers Cloudflare deploy"
+jj git push --bookmark main || fail=1
+
+step "push: Radicle"
+if rad inspect >/dev/null 2>&1; then
+  rad push || { echo "rad push failed (node running? key unsealed?)"; fail=1; }
+else
+  echo "repo not initialized on Radicle — run: rad init (once)"; fail=1
+fi
+
+step "build"
+npm run build >/dev/null || { echo "build failed — skipping IPFS pin"; exit 1; }
+
+step "pin: IPFS + publish IPNS"
+if ipfs swarm peers >/dev/null 2>&1; then
+  if ! ipfs key list | grep -qx wschwab-site; then
+    ipfs key gen wschwab-site >/dev/null
+    echo "created IPNS key 'wschwab-site'"
+  fi
+  cid=$(ipfs add -rQ --cid-version 1 dist) || { echo "ipfs add failed"; exit 1; }
+  echo "CID: $cid"
+  echo "     https://dweb.link/ipfs/$cid"
+  ipfs name publish --key=wschwab-site --quieter "/ipfs/$cid" || fail=1
+  ipns=$(ipfs key list -l | awk '$2=="wschwab-site"{print $1}')
+  echo "IPNS: $ipns"
+  echo "     https://dweb.link/ipns/$ipns"
+else
+  echo "kubo daemon not running — skipped IPFS pin (start with: ipfs daemon)"
+  fail=1
+fi
+
+# step "pin: Swarm"  — deferred; requires a funded bee node (postage stamps)
+
+step "done"
+[ "$fail" -eq 0 ] && echo "all targets updated ✓" || echo "finished with warnings ⚠ (see above)"
+exit "$fail"
