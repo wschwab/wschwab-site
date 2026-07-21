@@ -21,7 +21,7 @@ jj git push --bookmark main || fail=1
 
 step "push: Radicle"
 if rad inspect >/dev/null 2>&1; then
-  rad push || { echo "rad push failed (node running? key unsealed?)"; fail=1; }
+  git push rad main && rad sync || { echo "rad push/sync failed (node running? key unsealed?)"; fail=1; }
 else
   echo "repo not initialized on Radicle — run: rad init (once)"; fail=1
 fi
