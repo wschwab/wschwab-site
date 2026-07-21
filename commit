@@ -6,7 +6,15 @@ cd "$(dirname "$0")"
 
 msg="${1:?usage: ./commit \"message\"}"
 fail=0
+rad_agent_started=0
 step() { printf '\n\033[33m── %s\033[0m\n' "$1"; }
+cleanup() {
+  if [ "$rad_agent_started" -eq 1 ]; then
+    ssh-agent -k >/dev/null
+    echo "stopped temporary ssh-agent"
+  fi
+}
+trap cleanup EXIT
 
 step "jj: commit + advance main"
 if [ -n "$(jj diff --name-only)" ]; then
@@ -21,7 +29,21 @@ jj git push --bookmark main || fail=1
 
 step "push: Radicle"
 if rad inspect >/dev/null 2>&1; then
-  git push rad main && rad sync || { echo "rad push/sync failed (node running? key unsealed?)"; fail=1; }
+  if [ ! -t 0 ]; then
+    echo "Radicle authentication requires an interactive terminal"
+    fail=1
+  elif eval "$(ssh-agent -s)" >/dev/null; then
+    rad_agent_started=1
+    if rad auth; then
+      git push rad main && rad sync || { echo "rad push/sync failed (node running?)"; fail=1; }
+    else
+      echo "Radicle authentication failed"
+      fail=1
+    fi
+  else
+    echo "failed to start temporary ssh-agent"
+    fail=1
+  fi
 else
   echo "repo not initialized on Radicle — run: rad init (once)"; fail=1
 fi
