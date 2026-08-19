@@ -1,0 +1,148 @@
+/* =========================================================================
+   WORLD: Risograph technical zine  ·  direction seed 3856f232, candidate 7
+
+   The rice writeup as the zine the scene actually prints. The frame is
+   newsprint stock and two spot inks; each act is then "run through the press"
+   in its own machine's palette. The fluorescent pink is chosen because it
+   rhymes with Cyberdream's #ff007c — the frame hands off into Act I instead
+   of fighting it.
+
+   Rendition discipline: grain and misregistration live on GROUNDS and
+   ILLUSTRATION only, never under type. This deck's subject is contrast rigor;
+   texture that eats legibility would argue against the product.
+   ========================================================================= */
+@import './deck-core.css';
+
+/* Redaction (MCKL, OFL — see OFL-Redaction.txt) at six halftone screens.
+   Only the three grades actually in use are ever fetched. */
+@font-face{font-family:'Redaction10';font-weight:700;font-display:swap;
+  src:url('/fonts/redaction-10-700.woff2') format('woff2')}
+@font-face{font-family:'Redaction20';font-weight:700;font-display:swap;
+  src:url('/fonts/redaction-20-700.woff2') format('woff2')}
+@font-face{font-family:'Redaction35';font-weight:700;font-display:swap;
+  src:url('/fonts/redaction-35-700.woff2') format('woff2')}
+@font-face{font-family:'Redaction50';font-weight:700;font-display:swap;
+  src:url('/fonts/redaction-50-700.woff2') format('woff2')}
+@font-face{font-family:'Redaction70';font-weight:700;font-display:swap;
+  src:url('/fonts/redaction-70-700.woff2') format('woff2')}
+@font-face{font-family:'Redaction100';font-weight:700;font-display:swap;
+  src:url('/fonts/redaction-100-700.woff2') format('woff2')}
+@font-face{font-family:'FiraCond';font-weight:400;font-display:swap;
+  src:url('/fonts/fira-condensed-400.woff2') format('woff2')}
+@font-face{font-family:'FiraCond';font-weight:700;font-display:swap;
+  src:url('/fonts/fira-condensed-700.woff2') format('woff2')}
+@font-face{font-family:'Iosk';font-weight:400;font-display:swap;
+  src:url('/fonts/iosk-400.woff2') format('woff2')}
+@font-face{font-family:'Iosk';font-weight:700;font-display:swap;
+  src:url('/fonts/iosk-700.woff2') format('woff2')}
+
+.deck {
+  --p-display: 'Redaction50', Georgia, serif;   /* the frame: mid screen */
+  --grade-laptop: 'Redaction20';                /* overridden per build state */
+  --p-data: 'Iosk', ui-monospace, monospace;
+  --p-body: 'FiraCond', system-ui, sans-serif;
+  --rule: 2px;
+  --ink-2: #3D5588;
+}
+
+/* the frame: newsprint stock, ink black, federal blue, fluorescent pink */
+[data-palette="site"] {
+  --p-bg:#EFE9DA; --p-surface:#E4DBC7; --p-raised:#D9CEB6; --p-line:#1A1A18;
+  --p-text:#1A1A18; --p-dim:#4A4336;
+  --p-accent:#FF48B0; --p-accent-ink:#B81272; --p-accent-2:#3D5588;
+  --p-ok:#2E6244; --p-warn:#8A5200; --p-err:#B0201C;
+}
+
+/* ---- the press: halftone screen over every ground ---- */
+.deck::after {
+  content: ""; position: fixed; inset: 0; z-index: 30; pointer-events: none;
+  background-image: radial-gradient(circle at center, #000 0.9px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: soft-light; opacity: .34;
+}
+[data-palette="snowstorm"].deck::after,
+[data-palette="site"].deck::after { mix-blend-mode: multiply; opacity: .13 }
+
+/* ---- display type: the screen IS the state ----
+   archbox is built and running, so it prints at the finest screen; nixbox is
+   specced, so it prints coarse and refines as phases land. */
+.slide h2, .deck__masthead h1 {
+  text-transform: uppercase; letter-spacing: -.005em; line-height: .95;
+  font-weight: 700;
+}
+/* Act I prints at the FINEST screen, not the coarsest. Measured from the font
+   binaries: Redaction 100 draws 'A' with 24 points, Redaction 10 with 224 — the
+   grade number is halftone screen coarseness, so 100 is the chunkiest cut, not
+   the densest. On the two dark Act I grounds that coarse face loses its thin
+   strokes entirely and the headings read as mush (slides 03-08). Redaction 20
+   keeps the riso character with enough outline detail to stay legible, and it
+   matches the file's own stated intent: the built machine prints fine. */
+[data-palette="cyberdream"] .slide h2,
+[data-palette="tokyonight"] .slide h2 { font-family: 'Redaction20', Georgia, serif }
+[data-palette="snowstorm"] .slide h2 { font-family: var(--grade-laptop), Georgia, serif }
+.deck__masthead h1 { font-size: clamp(2.6rem, 8vw, 5.6rem) }
+.slide h2 { font-size: clamp(1.9rem, 4.6vw, 3.6rem) }
+/* misregistration: the second ink prints a hair off. Illustration, not text
+   legibility — the black plate carries the reading. */
+.slide h2 { text-shadow: 2px -2px 0 color-mix(in srgb, var(--p-accent-2) 45%, transparent) }
+/* Tokyo Night is the one ground where that offset ink fails: #2ac3de over
+   #24283b lands at 3.6:1 against its own #c0caf5 glyph, so the second plate
+   smears into the letterforms instead of sitting behind them (Cyberdream's
+   pink manages 10.3:1 on near-black, which is why only this act suffered).
+   Print the offset in the dark plate here — same misregistration, ~9.9:1,
+   and the type stays readable. Slides 06-08 are the affected ones. */
+[data-palette="tokyonight"] .slide h2 {
+  text-shadow: 2px -2px 0 color-mix(in srgb, #1a1b26 60%, transparent);
+}
+[data-palette="tokyonight"] .slide h2 em {
+  text-shadow: 2px -2px 0 color-mix(in srgb, #1a1b26 55%, transparent);
+}
+.slide h2 em, .deck__masthead h1 em {
+  font-style: normal; color: var(--p-accent);
+  -webkit-text-stroke: 0; text-shadow: 2px -2px 0 color-mix(in srgb, var(--p-accent-2) 35%, transparent);
+}
+
+.slide h3, .slide__no, .rail-note, .deck__bar {
+  font-weight: 700; letter-spacing: .16em;
+}
+.lede { font-weight: 400 }
+
+/* ---- ink rules: hard, black, no hairlines ---- */
+.slide, .versus, .versus > div, .file, .callout, .sw, .pipe__step, .hud__p,
+.arrow-row, .readout div, .phase, .ledger div, .trace > div, .shot {
+  border-color: var(--p-line);
+}
+.callout { border-top-width: 6px; border-top-color: var(--p-accent) }
+.file__name { background: var(--p-line); color: var(--p-bg) }
+.file__name b { color: var(--p-accent) }
+.tag-mock { border-width: 2px; font-weight: 700 }
+
+/* ---- print furniture: registration marks at the plate corners ---- */
+[data-view="deck"] .slide[data-active]::before,
+[data-view="deck"] .slide[data-active]::after {
+  content: ""; position: absolute; width: 13px; height: 13px; z-index: 3;
+  background:
+    linear-gradient(var(--p-accent-2), var(--p-accent-2)) center/100% 1.5px no-repeat,
+    linear-gradient(var(--p-accent-2), var(--p-accent-2)) center/1.5px 100% no-repeat;
+  opacity: .8; pointer-events: none;
+}
+[data-view="deck"] .slide[data-active]::before { top: 14px; left: 14px }
+[data-view="deck"] .slide[data-active]::after { bottom: 52px; right: 14px }
+
+/* ---- the spine is the zine's fold ---- */
+.deck__spine::before {
+  background: repeating-linear-gradient(180deg,
+    var(--p-line) 0 7px, transparent 7px 13px);
+  width: 2px; left: -1px;
+}
+.deck__rail button { background: var(--p-line); opacity: .35; width: 3px }
+.deck__rail button[aria-current="true"] { background: var(--p-accent); opacity: 1 }
+
+.deck__bar { border-top-width: var(--rule) }
+/* colour specimens sit ABOVE the screen: slide 10's whole job is showing exact
+   values, and a halftone over a swatch defeats it */
+.swatches .sw i, .chart { position: relative; z-index: 31 }
+.swatches .sw i { box-shadow: inset 0 0 0 2px var(--p-line) }
+.dm { border-width: var(--rule) }
+
+@media (prefers-reduced-motion: reduce) { .deck::after { opacity: .3 } }

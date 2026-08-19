@@ -1,0 +1,15 @@
+/* World: site continuation. The incumbent — Instrument Serif + JetBrains Mono
+   on the site's ink/amber. Kept for comparison against the two replacements. */
+@import './deck-core.css';
+
+.deck {
+  --p-display: 'Instrument Serif', Georgia, serif;
+  --p-data: 'JetBrains Mono', ui-monospace, monospace;
+  --p-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+[data-palette="site"] {
+  --p-bg:#070d1a; --p-surface:#0c1526; --p-raised:#101b31; --p-line:#1c2a45;
+  --p-text:#e9e7e0; --p-dim:#8fa0bf;
+  --p-accent:#f2a93c; --p-accent-ink:#f2a93c; --p-accent-2:#5cd6e8;
+  --p-ok:#5cd6e8; --p-warn:#f2a93c; --p-err:#ff6e5e;
+}

@@ -1,0 +1,1085 @@
+---
+/* Shared slide content for every /rice/ world. The worlds differ only in
+   world-*.css; one copy of the markup means the previews can never disagree
+   about the facts. */
+import progress from '../data/rice-progress.json';
+
+/* Every laptop caption is derived here. Nothing downstream types status text.
+   A phase that isn't `done` renders as a destination state; when it flips in
+   the JSON, the caption flips with it and nobody edits this file. */
+const updated = new Date(progress.updated);
+const staleDays = Math.max(0, Math.floor((Date.now() - updated.getTime()) / 864e5));
+
+const phaseState = (n: number) =>
+  progress.phases.find((p) => p.n === n)?.state ?? 'pending';
+
+const latest = progress.recent[0];
+
+/** Real capture caption once the phase lands; destination state until then. */
+function cap(phase: number) {
+  return phaseState(phase) === 'done'
+    ? { real: true, text: `nixbox · gen ${latest.gen} · ${latest.date}` }
+    : { real: false, text: `destination state · phase ${phase} pending` };
+}
+
+/* Staleness renders; it does not hide. A quiet side project is a respectable
+   state, so this reads as composed rather than abandoned. */
+const stale =
+  staleDays <= 1 ? 'updated today'
+  : staleDays < 21 ? `updated ${staleDays} days ago`
+  : `specced · quiet for ${staleDays} days`;
+
+const done = progress.phases.filter((p) => p.state === 'done').length;
+
+/* Redaction ships one face at six halftone screens. In the riso world that
+   grade is not texture, it is state: the built machine is printed at the
+   finest screen, and the specced one resolves as its phases land. Coarse type
+   IS the honest caption, so nobody has to write "unfinished" anywhere. */
+const GRADES = [10, 20, 35, 50, 70, 100];
+const laptopGrade = GRADES[Math.round((done / progress.phases.length) * (GRADES.length - 1))];
+
+const slides = [
+  { n: 0,  palette: 'site',       split: 50 },
+  { n: 1,  palette: 'site',       split: 50 },
+  { n: 2,  palette: 'site',       split: 50 },
+  { n: 3,  palette: 'cyberdream', split: 62 },
+  { n: 4,  palette: 'cyberdream', split: 88 },
+  { n: 5,  palette: 'tokyonight', split: 62 },
+  { n: 6,  palette: 'tokyonight', split: 62 },
+  { n: 7,  palette: 'tokyonight', split: 88 },
+  { n: 8,  palette: 'tokyonight', split: 88 },
+  { n: 9,  palette: 'snowstorm',  split: 38 },
+  { n: 10, palette: 'snowstorm',  split: 38 },
+  { n: 11, palette: 'snowstorm',  split: 38 },
+  { n: 12, palette: 'snowstorm',  split: 12 },
+  { n: 13, palette: 'snowstorm',  split: 38 },
+  { n: 14, palette: 'snowstorm',  split: 38 },
+  { n: 15, palette: 'snowstorm',  split: 12 },
+  { n: 16, palette: 'site',       split: 50 },
+  { n: 17, palette: 'site',       split: 50 },
+  { n: 18, palette: 'site',       split: 50 },
+];
+const machineOf: Record<string, string> = {
+  site: 'wschwab.xyz', cyberdream: 'archbox · cyberdream',
+  tokyonight: 'archbox · tokyonight storm', snowstorm: 'nixbox · snow storm',
+};
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<div
+  class="deck"
+  id="deck"
+  data-palette="site"
+  data-slides={slides.length}
+  style={`--grade-laptop:'Redaction${laptopGrade}'`}
+  data-laptop-grade={laptopGrade}
+>
+
+  <header class="deck__masthead">
+    <h1>Two machines. Opposite palettes. <em>One idea.</em></h1>
+    <p>
+      An Arch/Hyprland desktop that is built and running, and a NixOS/niri laptop that is
+      specced with early phases landing. This deck adopts each machine's real palette as you
+      move through it, the colors are transcribed from the running hosts.
+    </p>
+  </header>
+
+  <!-- ============================= BOOKEND ============================= -->
+
+  <section class="slide" id="s0" data-palette="site" data-split="50" aria-label="Slide 00, cold open">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>00</b> · cold open</span>
+        <h2>Two machines. Opposite palettes. <em>One idea.</em></h2>
+        <p class="lede">
+          One is dark, neon, and glowing. One is light, quiet, and Nordic. Two machines, two vibes.
+        </p>
+        <p class="affordance">
+          <span class="k-only"><kbd>←</kbd><kbd>→</kbd> to move through</span>
+          <span class="t-only">swipe to move through</span>
+        </p>
+      </div>
+      <div class="pane pane--tight">
+        <div class="versus" style="grid-template-columns:1fr 1fr">
+          <div><div class="k">desktop</div><div class="v">archbox</div></div>
+          <div><div class="k">laptop</div><div class="v">nixbox</div></div>
+          <div><div class="k">os</div><div class="v">Arch + Hyprland</div></div>
+          <div><div class="k">os</div><div class="v">NixOS + niri</div></div>
+          <div><div class="k">gpu</div><div class="v">RTX 4070 Ti</div></div>
+          <div><div class="k">gpu</div><div class="v">Intel UHD 620</div></div>
+          <div><div class="k">state</div><div class="v" style="color:var(--p-ok)">built · running</div></div>
+          <div><div class="k">state</div><div class="v" style="color:var(--p-warn)">specced · landing</div></div>
+        </div>
+        <p class="caption" data-real><span>both machines are real; screenshots pending</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s1" data-palette="site" data-split="50" aria-label="Slide 01, thesis">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>01</b> · thesis</span>
+        <h2>A rice is a <em>build</em>, not a pile of symlinks.</h2>
+        <p class="lede">
+          Both machines have exactly one source of truth for color, and everything downstream
+          is generated from it. They only differ on which direction the arrow points.
+        </p>
+        <p>
+          The split isn't only cosmetic. It's also about what you can safely change, what you can
+          roll back, and whether "the config" is a thing you edit or a thing you produce.
+        </p>
+        <p>
+          In other words, both run (very) different distros. The name says it all: the 
+          <code class="mono">archbox</code> runs an Arch-based distro, while the 
+          <code class="mono">nixbox</code> is on NixOS.
+        </p>
+      </div>
+      <div class="pane pane--tight">
+        <div class="arrows">
+          <div class="arrow-row">
+            <span class="end">live config</span>
+            <span class="mid">──▶</span>
+            <span class="end r">repo</span>
+          </div>
+          <div class="arrow-row">
+            <span class="end">repo</span>
+            <span class="mid">◀──</span>
+            <span class="end r">live config</span>
+          </div>
+        </div>
+        <div class="versus" style="grid-template-columns:1fr 1fr">
+          <div><div class="k">archbox · dotstack</div><div class="v">sync up</div></div>
+          <div><div class="k">nixbox · flake</div><div class="v">generate down</div></div>
+        </div>
+        <div class="file">
+          <div class="file__name"><b>source of truth</b> · one file each</div>
+          <pre><code><span class="c">-- archbox</span>
+~/.config/hypr/<span class="k">colors.lua</span>
+
+<span class="c"># nixbox</span>
+modules/<span class="k">palette.nix</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s2" data-palette="site" data-split="50" aria-label="Slide 02, two palettes each">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>02</b> · two palettes each</span>
+        <h2>Each machine runs <em>two</em> palettes.</h2>
+        <p class="lede">
+          Same instinct, solved twice: one palette can't do every job. Full neon everywhere is
+          fine until you have to read it all day.
+        </p>
+        <p>
+          Archbox splits by <strong>function</strong>. Vivid Cyberdream for chrome you glance
+          at: borders, lock screen, bar accents. Softer TokyoNight Storm for anything you read
+          for an hour: terminal, Neovim, the Qt apps whose lists you scan.
+        </p>
+        <p>
+          Nixbox splits by <strong>time</strong>. Snow Storm by day, Polar Night after dusk,
+          both prebuilt as variants and swapped without a rebuild.
+        </p>
+      </div>
+      <div class="pane pane--tight">
+        <div class="versus" style="grid-template-columns:1fr 1fr">
+          <div><div class="k">archbox · split by function</div><div class="v">glance ／ read</div></div>
+          <div><div class="k">nixbox · split by time</div><div class="v">day ／ night</div></div>
+        </div>
+        <div class="swatches" style="grid-template-columns:repeat(4,1fr)">
+          <div class="sw"><i style="background:#16181a;border-bottom:1px solid #333a41"></i><span><b>cyberdream</b>glance · #16181a</span></div>
+          <div class="sw"><i style="background:#5ef1ff"></i><span><b>cyan</b>primary · #5ef1ff</span></div>
+          <div class="sw"><i style="background:#24283b"></i><span><b>tn storm</b>read · #24283b</span></div>
+          <div class="sw"><i style="background:#7aa2f7"></i><span><b>blue</b>link · #7aa2f7</span></div>
+        </div>
+        <div class="callout">
+          <p>
+            The two <code class="mono">archbox</code> palettes agree on the color doing most of
+            the work: the Cyberdream cyan and TokyoNight's teal sit <strong>4 degrees apart in hue</strong>.
+            Only the pink and green were orphans, and both were replaced with the terminal's own
+            values. The bases stay deliberately mismatched, so the terminal reads as lifted and
+            floating rather than flush with the wallpaper.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ ACT I · desktop: archbox ============================ -->
+
+  <section class="slide" id="s3" data-palette="cyberdream" data-split="62" aria-label="Slide 03, the machine">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>03</b> · the machine</span>
+        <h2>archbox</h2>
+        <p class="lede">
+        The one that's finished, at least as much as anything ever is. Built for throughput and glow, on hardware 
+        that doesn't need to apologize (or hang) for a compositor effect.
+        </p>
+        <div class="readout">
+          <div><span>distro</span><b>Arch-based fork</b></div>
+          <div><span>kernel</span><b>linux-<i>zen</i></b></div>
+          <div><span>compositor</span><b>Hyprland <i>(wayland)</i></b></div>
+          <div><span>gpu</span><b>NVIDIA RTX <i>4070 Ti</i></b></div>
+          <div><span>bar / hud</span><b>eww + hyprglaze</b></div>
+          <div><span>palette</span><b>colors.lua → <i>4 consumers</i></b></div>
+          <div><span>state</span><b style="color:var(--p-ok)">built · daily driver</b></div>
+        </div>
+      </div>
+      <div class="pane pane--rail">
+        <span class="rail-note">act i · desktop</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s4" data-palette="cyberdream" data-split="88" aria-label="Slide 04, the look">
+    <div class="slide__grid">
+      <div class="pane pane--flush">
+        <div class="dm">
+          <div class="dm__bar">
+            <span class="tag-mock" style="font-weight:700">cyberdream mock</span>
+            <span class="dm__pill dm__pill--a">1 2 3 4</span>
+            <span class="dm__pill">▂▅▃▇▅ 18ms</span>
+            <span class="dm__pill dm__pill--2">4070 ti · 41°C</span>
+            <span class="dm__spacer"></span>
+            <span class="dm__pill">♪ Boards of Canada</span>
+            <span class="dm__pill">vol 40</span>
+            <span class="dm__pill dm__pill--a">21:14</span>
+          </div>
+          <svg class="dm__ridge" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 78 46 54 88 68 132 38 178 60 224 30 272 56 318 40 362 62 400 46V120H0Z"
+                  fill="none" stroke="#5ef1ff" stroke-width="1.1" opacity=".55"/>
+            <path d="M0 78 46 54 88 68 132 38 178 60 224 30 272 56 318 40 362 62 400 46V120H0Z"
+                  fill="#16181a" opacity=".78"/>
+            <path d="M0 96 54 80 108 90 164 70 220 84 278 66 334 82 400 72V120H0Z"
+                  fill="#101215"/>
+          </svg>
+          <div class="dm__stage">
+            <div class="dm__body">
+              <div class="dm__win dm__win--on">
+                <div class="dm__title">ghostty — fish</div>
+                <div class="dm__term">
+                  <div><span class="p">❯</span> check-colors.sh</div>
+                  <div class="d">reading colors.lua … 8 values</div>
+                  <div class="d">shaders/cyberdream-drift.frag   8 ok</div>
+                  <div class="d">eww/eww.scss                    8 ok</div>
+                  <div class="d">hyprglaze-themes.json           8 ok</div>
+                  <div><span class="p">✓</span> no drift across 4 consumers</div>
+                  <div style="height:.5rem"></div>
+                  <div><span class="p">❯</span> hyprctl monitors | rg refresh</div>
+                  <div class="d">  refreshRate: 164.96 Hz</div>
+                  <div class="d">  scale: 1.00</div>
+                  <div><span class="p">❯</span> <span style="opacity:.7">▌</span></div>
+                </div>
+              </div>
+              <div class="dm__win dm__win--off">
+                <div class="dm__title">qutebrowser</div>
+                <div class="dm__term">
+                  <div class="d">wiki.archlinux.org/title/Hyprland</div>
+                  <div style="height:.4rem"></div>
+                  <div style="color:#5ef1ff">Hyprland</div>
+                  <div class="d">A dynamic tiling Wayland compositor</div>
+                  <div class="d">based on wlroots that doesn't sacrifice</div>
+                  <div class="d">on its looks.</div>
+                  <div style="height:.4rem"></div>
+                  <div class="d">Contents</div>
+                  <div class="d">1  Installation</div>
+                  <div class="d">2  Configuration</div>
+                  <div class="d">3  Variables</div>
+                  <div class="d">4  Window rules</div>
+                </div>
+              </div>
+            </div>
+            <div class="dm__launch">
+              <div>❯ col</div>
+              <div data-sel>colors.lua — palette source of truth</div>
+              <div>check-colors.sh — drift guard</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pane pane--rail">
+        <span class="rail-note">the look · not a screenshot</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s5" data-palette="tokyonight" data-split="62" aria-label="Slide 05, reading surfaces">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>05</b> · reading surfaces</span>
+        <h2>You've been reading for a while now.</h2>
+        <p class="lede">
+          The deck just changed palette. Everything from here is TokyoNight Storm, the 
+          palette the desktop uses for surfaces you <strong>read</strong>.
+        </p>
+        <p>
+          Chrome is glanced at; a terminal is stared into. Full-saturation neon works for a
+          border you register in peripheral vision, but wrong for a buffer you scan for an hour.
+          The transition you just watched <em>is</em> the argument; your eyes should be telling 
+          you the difference.
+        </p>
+        <div class="readout">
+          <div><span>above · chrome</span><b>cyberdream <i>#5ef1ff</i></b></div>
+          <div><span>here · reading</span><b>tn storm <i>#7aa2f7</i></b></div>
+          <div><span>hue delta</span><b>4°</b></div>
+          <div><span>differs in</span><b>saturation <i>— the point</i></b></div>
+        </div>
+      </div>
+      <div class="pane pane--tight">
+        <div class="file">
+          <div class="file__name"><b>qt6ct/colors/tokyonight-storm.conf</b></div>
+          <pre><code><span class="c"># reading surfaces only</span>
+bg        <span class="s">#24283b</span>
+bg_dark   <span class="s">#1f2335</span>
+fg        <span class="s">#c0caf5</span>
+comment   <span class="s">#565f89</span>
+blue      <span class="s">#7aa2f7</span>  <span class="c">-- link</span>
+teal      <span class="s">#2ac3de</span>  <span class="c">-- selection</span></code></pre>
+        </div>
+        <p class="caption" data-real><span>values transcribed from <b>colors.lua</b> · M.tn</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s6" data-palette="tokyonight" data-split="62" aria-label="Slide 06, dotstack">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>06</b> · dotstack</span>
+        <h2>The desktop's real differentiator isn't the wallpaper.</h2>
+        <p class="lede">
+          It's <strong>dotstack</strong> a homegrown system that takes components, package lists, 
+          harnesses, sync scripts, and skills that keep a snapshot of a live workstation.
+        </p>
+        <p>
+          The arrow points up. You change the running machine, and the sync pulls that change
+          into the repo as a described component rather than a captured blob. Restore runs the
+          same components in the other direction.
+        </p>
+      </div>
+      <div class="pane pane--tight">
+        <div class="pipe">
+          <div class="pipe__step"><b>live config</b><span>~/.config, the running machine</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>sync</b><span>update-all-with-dotstack-sync</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>repo</b><span>components · markers · packages</span></div>
+        </div>
+        <div class="file">
+          <div class="file__name"><b>dotstack/</b></div>
+          <pre><code>components/   <span class="c">per-app install + restore units</span>
+config/       <span class="c">tracked dotfiles</span>
+lib/          <span class="c">shared shell harness</span>
+markers/      <span class="c">what is managed, and by whom</span>
+packages/     <span class="c">explicit package sets</span>
+restore-all   <span class="c">the other direction</span></code></pre>
+        </div>
+        <div class="callout">
+          <p>
+            Four files carry the palette's hex values and cannot read the Lua table —
+            a GLSL shader, a SCSS file, a daemon's JSON, and the Lua itself.
+            <strong>check-colors.sh greps all four and exits non-zero if they've drifted.</strong>
+            Duplication you can't remove is duplication you test.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s7" data-palette="tokyonight" data-split="88" aria-label="Slide 07, the orchestration log">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>07</b> · the orchestration log</span>
+        <h2>Which agent to trust is an <em>empirical</em> question.</h2>
+        <p class="lede">
+          Several models and harnesses maintain these machines. Deciding which one gets which job
+          might start on vibes, but should build evidence that converges on what's ideal in which
+          harness for what situation. Enter a recent project: the <strong>Orchestration Logs</strong>.
+        </p>
+        <p>
+          Every orchestration session also creates a dated note with re-runnable evidence: a command, 
+          a grep, a <code class="mono">file:line</code>. Opinions don't survive distillation. The 
+          entries are sorted by <strong>what actually failed</strong>, which is the field that earns 
+          the log its keep:
+        </p>
+        <div class="pipe" style="margin-top:1.4rem">
+          <div class="pipe__step"><b>harness</b><span>buffered output read as a stall</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>provider</b><span>a 429 read as incompetence</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>orchestrator</b><span>my prompt was the defect</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>model</b><span>only what's left</span></div>
+        </div>
+        <p style="margin-top:1.4rem">
+          The tally is the punchline. Across 43 logged entries, <strong>harness and provider
+          problems outnumber model problems roughly two to one</strong> — most "the AI failed"
+          moments were plumbing.
+        </p>
+      </div>
+      <div class="pane pane--rail">
+        <span class="rail-note">act i · desktop</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s8" data-palette="tokyonight" data-split="88" aria-label="Slide 08, war story, Xid 175">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>08</b> · war story</span>
+        <h2>Xid 175: black screen <em>diagnosis</em>.</h2>
+        <p class="lede">
+          A tale of trying to debug constant black screens, perseverance, and a little (a lot of) 
+          help from my friends (/agents). Provided as an example of a day in the Linux driver life.
+        </p>
+        <div class="trace">
+          <div>
+            <b class="wrong">First read: a render submission fault.</b>
+            <span>Plausible, matched the vibe of the crash, and would have sent me into
+            driver-version roulette and a GPU swap. It was wrong on three independent axes.</span>
+          </div>
+          <div>
+            <b>Axis one — the workload.</b>
+            <span>Every single crash was during <strong>hardware video decode</strong>. Not
+            gaming, not compute. A render path that only fails on decode isn't a render path.</span>
+          </div>
+          <div>
+            <b>Axis two — the Xid string itself.</b>
+            <span>It was <code class="mono">GSP_RM_CONTROL</code>. That's the GPU system
+            processor's resource-manager control channel, not a graphics submission.</span>
+          </div>
+          <div>
+            <b>Axis three — the trace.</b>
+            <span>The stack was a DMA <strong>teardown</strong>, not a submission. The failure is
+            on the way out of an operation, not on the way in.</span>
+          </div>
+          <div>
+            <b>Three independent signals beat one confident hypothesis.</b>
+            <span>All three pointed at decode-path resource teardown. Cheap test before expensive
+            test: change the decode path, not the hardware.</span>
+          </div>
+        </div>
+      </div>
+      <div class="pane pane--rail">
+        <span class="rail-note">reasoning, not conclusion</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ ACT II · laptop ============================ -->
+
+  <section class="slide" id="s9" data-palette="snowstorm" data-split="38" aria-label="Slide 09, constraints as design driver">
+    <div class="slide__grid">
+      <div class="pane pane--tight">
+        <div class="readout" style="margin-top:0">
+          <div><span>cpu</span><b>i7-8565U</b></div>
+          <div><span>gpu</span><b>Intel UHD 620</b></div>
+          <div><span>esp free</span><b>913 MiB / 1 GiB</b></div>
+          <div><span>ram</span><b>31 GiB</b></div>
+          <div><span>compositor</span><b>niri <i>(scrollable)</i></b></div>
+        </div>
+        <p class="caption" data-real={cap(0).real || undefined}>{!cap(0).real && <span class="tag-mock">mock</span>}<span>{cap(0).text}</span></p>
+      </div>
+      <div class="pane">
+        <span class="slide__no"><b>09</b> · constraints as design driver</span>
+        <h2>The hardware defines the aesthetic.</h2>
+        <p class="lede">
+          No video wallpaper. No heavy blur. UHD 620 will render a compositor beautifully and
+          will not render a compositor showing off.
+        </p>
+        <p>
+          The boot partition used to be the sharper constraint: <strong>12 MiB free on a shared
+          100 MiB ESP</strong>, one existing initrd eating ~42 MiB, and no room for a second. That
+          single number ended up being a whole argument against using Plymouth for login. We removed 
+          the old Windows install, repartitioned, and <strong>/boot became a dedicated 1 GiB 
+          partition with 913 MiB free</strong>.
+        </p>
+        <p>
+          The constraint evaporated but Plymouth still isn't on the roadmap, classic case of an old 
+          implementation staying in even once the reasons change. But it <em>could</em> go in now.
+        </p>
+        <p>
+          Constraints don't produce a compromised design. They produce a specific one:
+          flat surfaces, real contrast, geometry instead of effects.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s10" data-palette="snowstorm" data-split="38" aria-label="Slide 10, the Snow Storm palette">
+    <div class="slide__grid">
+      <div class="pane pane--tight">
+        <div class="callout" style="margin-top:0">
+          <p>
+            <strong>#5E81AC does about 90% of the accent work.</strong> Aurora colors appear only
+            when they mean something — an error, a warning, a live state. A palette where every
+            color is available everywhere is a palette that communicates nothing.
+          </p>
+        </div>
+        <p class="caption" data-real={cap(1).real || undefined}>{!cap(1).real && <span class="tag-mock">mock</span>}<span>{cap(1).text}</span></p>
+      </div>
+      <div class="pane">
+        <span class="slide__no"><b>10</b> · the snow storm palette</span>
+        <h2>One accent, held to it.</h2>
+        <div class="swatches">
+          <div class="sw"><i style="background:#ECEFF4"></i><span><b>base</b>ground · #ECEFF4</span></div>
+          <div class="sw"><i style="background:#E5E9F0"></i><span><b>surface</b>raised · #E5E9F0</span></div>
+          <div class="sw"><i style="background:#D8DEE9"></i><span><b>border</b>rules · #D8DEE9</span></div>
+          <div class="sw"><i style="background:#2E3440"></i><span><b>text</b>primary · #2E3440</span></div>
+          <div class="sw"><i style="background:#5E81AC"></i><span><b>accent</b>fills · #5E81AC</span></div>
+          <div class="sw"><i style="background:#43648E"></i><span><b>accent ink</b>text &lt;18px · #43648E</span></div>
+          <div class="sw"><i style="background:#88C0D0"></i><span><b>fill</b>secondary · #88C0D0</span></div>
+          <div class="sw"><i style="background:#BF616A"></i><span><b>red</b>error only · #BF616A</span></div>
+        </div>
+        <p>
+          The two accents are <em>disciplined</em>. Nord's <code class="mono">#5E81AC</code> is valid as
+          a fill, a ring, or large display type, but would fail contrast as small text on a Snow Storm
+          ground. So small text uses a derived ink value, and a helper called
+          <code class="mono">pickInk</code> makes that choice rather than each generator guessing.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s11" data-palette="snowstorm" data-split="38" aria-label="Slide 11, the pipeline">
+    <div class="slide__grid">
+      <div class="pane pane--tight">
+        <div class="file" style="margin-top:0">
+          <div class="file__name"><b>modules/palette.nix</b></div>
+          <pre><code><span class="k">frost</span> = &#123;
+  accent = <span class="s">"#5E81AC"</span>;
+  hl     = <span class="s">"#81A1C1"</span>;
+  fill   = <span class="s">"#88C0D0"</span>;
+&#125;;</code></pre>
+        </div>
+        <p class="caption" data-real={cap(1).real || undefined}>{!cap(1).real && <span class="tag-mock">mock</span>}<span>{cap(1).text}</span></p>
+      </div>
+      <div class="pane">
+        <span class="slide__no"><b>11</b> · the pipeline</span>
+        <h2>Change one value, the whole desktop repaints.</h2>
+        <div class="pipe">
+          <div class="pipe__step"><b>palette.nix</b><span>one source of truth</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>generators</b><span>per-app theme formats</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>home-manager</b><span>declared, not copied</span></div>
+          <span class="pipe__arrow">▶</span>
+          <div class="pipe__step"><b>switch</b><span>a numbered generation</span></div>
+        </div>
+        <p style="margin-top:1.4rem">
+          Every generated theme traces back to the palette; a generator that hardcodes a hex value
+          is a bug. Contrast is not a review step. Programmatic WCAG tests enforce 4.5:1 for
+          normal text and 3:1 for large text and non-text UI across every required pair.
+        </p>
+        <p>
+          Because each activation is a generation, every repaint is <strong>rollback-able</strong>.
+          The worst outcome of a bad color is a boot menu entry.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s12" data-palette="snowstorm" data-split="12" aria-label="Slide 12, the astronomy engine">
+    <div class="slide__grid">
+      <div class="pane pane--rail">
+        <span class="rail-note">act ii · laptop</span>
+      </div>
+      <div class="pane pane--tight">
+        <span class="slide__no"><b>12</b> · the astronomy engine</span>
+        <h2>An all-sky chart that is <em>verifiable</em>.</h2>
+        <div class="split2">
+          <figure class="chart" style="margin-top:1.2rem">
+            <svg viewBox="0 0 320 320" role="img" aria-label="All-sky chart: zenith centered, horizon at the circumference, North up, East left.">
+              <g fill="none" stroke="#242933" stroke-width="1.2">
+                <circle cx="160" cy="160" r="148"/>
+                <circle cx="160" cy="160" r="143"/>
+                <circle cx="160" cy="160" r="95.3" stroke-opacity=".72"/>
+                <circle cx="160" cy="160" r="47.7" stroke-opacity=".72"/>
+                <path d="M160 12V308M12 160H308"/>
+                <path d="M55.3 55.3 264.7 264.7M264.7 55.3 55.3 264.7" stroke-opacity=".45"/>
+              </g>
+              <!-- the plough, drawn as an asterism: segments terminate at real
+                   star positions, magnitude sets the radius, no starburst glyphs -->
+              <g stroke="#242933" stroke-width="1.1" fill="none">
+                <path d="M118 84 141 74 164 80 181 96 208 100 231 88 246 106"/>
+              </g>
+              <g fill="#FFFFFF">
+                <circle cx="118" cy="84" r="3.2"/><circle cx="141" cy="74" r="2.6"/>
+                <circle cx="164" cy="80" r="2.9"/><circle cx="181" cy="96" r="2.2"/>
+                <circle cx="208" cy="100" r="3.4"/><circle cx="231" cy="88" r="2.7"/>
+                <circle cx="246" cy="106" r="3"/>
+                <circle cx="160" cy="160" r="1.6"/>
+                <circle cx="96" cy="150" r="2.1"/><circle cx="204" cy="152" r="1.8"/>
+                <circle cx="252" cy="166" r="2.4"/><circle cx="78" cy="196" r="2"/>
+                <circle cx="132" cy="212" r="2.6"/><circle cx="186" cy="228" r="1.9"/>
+                <circle cx="228" cy="204" r="2.2"/><circle cx="150" cy="264" r="2.8"/>
+                <circle cx="264" cy="232" r="1.7"/><circle cx="104" cy="252" r="2.3"/>
+                <circle cx="196" cy="276" r="2"/><circle cx="62" cy="164" r="1.8"/>
+                <circle cx="286" cy="150" r="2.1"/><circle cx="172" cy="44" r="2.4"/>
+                <circle cx="220" cy="60" r="1.9"/><circle cx="96" cy="112" r="1.7"/>
+                <circle cx="268" cy="120" r="2.2"/><circle cx="140" cy="130" r="1.6"/>
+              </g>
+              <!-- the moon: true illuminated geometry, ink outline, never a glyph -->
+              <g transform="translate(232,246)">
+                <circle r="9" fill="#FFFFFF" stroke="#242933" stroke-width="1"/>
+                <path d="M0 -9A9 9 0 0 0 0 9A5.6 5.6 0 0 1 0 -9Z" fill="#242933" opacity=".82"/>
+              </g>
+              <g class="card" text-anchor="middle">
+                <text x="160" y="26">N</text><text x="26" y="164">E</text>
+                <text x="294" y="164">W</text><text x="160" y="302">S</text>
+              </g>
+              <g class="alt" text-anchor="middle">
+                <text x="160" y="120">60°</text><text x="160" y="256">30°</text>
+              </g>
+            </svg>
+            <figcaption><span>un-blue-instrument-v1</span><span>zenith center · horizon rim</span></figcaption>
+          </figure>
+          <div>
+            <p>
+              Zenith at the center, horizon at the circumference, North up, <strong>East left</strong> 
+              because you are looking up, not down at a map.
+            </p>
+            <p>
+              Eight fixture cities pin the math. Sydney catches hemisphere errors: Crux must be
+              above the horizon and Polaris below. Quito puts both poles near the rim. Get a sign
+              wrong anywhere and a fixture fails.
+            </p>
+            <p>
+              Identical input produces <strong>byte-identical output</strong>. Because even lock 
+              screens deserve to be <em>spectacular</em>.
+            </p>
+            <p class="caption" data-real={cap(3).real || undefined}>{!cap(3).real && <span class="tag-mock">mock</span>}<span>{cap(3).text}</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s13" data-palette="snowstorm" data-split="38" aria-label="Slide 13, generative wallpaper">
+    <div class="slide__grid">
+      <div class="pane pane--tight">
+        <div class="shot" style="min-height:11rem">
+          <svg viewBox="0 0 300 170" preserveAspectRatio="none" style="width:100%;height:100%;display:block">
+            <rect width="300" height="170" fill="#D8DEE9"/>
+            <rect width="300" height="96" fill="#81A1C1" opacity=".55"/>
+            <circle cx="228" cy="52" r="15" fill="#EBCB8B"/>
+            <path d="M0 128 54 92 96 116 146 74 198 110 248 84 300 118V170H0Z" fill="#4C566A" opacity=".85"/>
+            <path d="M0 146 62 118 118 138 176 108 236 132 300 110V170H0Z" fill="#2E3440"/>
+          </svg>
+          <span class="shot__label">solar wallpaper · 14:20 UTC frame</span>
+        </div>
+        <p class="caption" data-real={cap(3).real || undefined}>{!cap(3).real && <span class="tag-mock">mock</span>}<span>{cap(3).text}</span></p>
+      </div>
+      <div class="pane">
+        <span class="slide__no"><b>13</b> · generative wallpaper</span>
+        <h2>The geometry is fixed for the day. The light isn't.</h2>
+        <p class="lede">
+          The civil date is the seed to produce one stable mountain geometry. Sun position and ambient light
+          then progress through UTC-keyed frames, rendered from the same ephemeris the star chart
+          uses.
+        </p>
+        <p>
+          The wallpaper is not a slideshow or animation; it's a function of the date
+          and the clock, and it selects the correct frame rather than fading between images.
+          Re-running the selector when nothing has changed is a no-op.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s14" data-palette="snowstorm" data-split="38" aria-label="Slide 14, station instruments">
+    <div class="slide__grid">
+      <div class="pane pane--tight">
+        <div class="hud" style="grid-template-columns:1fr;margin-top:0">
+          <div class="hud__p">
+            <div class="hud__label">station time</div>
+            <div class="hud__clock">14:32</div>
+            <div class="hud__row"><span>uptime</span><b>3h 12m</b></div>
+            <div class="hud__row"><span>generation</span><b>{latest.gen} (current)</b></div>
+          </div>
+          <div class="hud__p">
+            <div class="hud__label">wx · open-meteo</div>
+            <div class="hud__row"><span>now</span><b>3°C · light snow</b></div>
+            <svg class="spark" viewBox="0 0 120 26" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="0,20 15,18 30,19 45,12 60,14 75,8 90,10 105,6 120,9"
+                        fill="none" stroke="#43648E" stroke-width="1.5"/>
+            </svg>
+            <div class="hud__row"><span>temp °C</span><b>next 24h</b></div>
+          </div>
+          <div class="hud__p">
+            <div class="hud__label">pwr · net</div>
+            <div class="hud__row"><span>battery</span><b>81% · 3h12m</b></div>
+            <div class="hud__bar"><i style="width:81%;background:#4F6A38"></i></div>
+            <div class="hud__row"><span>cpu</span><b>12%</b></div>
+            <div class="hud__bar"><i style="width:12%"></i></div>
+          </div>
+        </div>
+        <p class="caption" data-real={cap(5).real || undefined}>{!cap(5).real && <span class="tag-mock">mock</span>}<span>{cap(5).text}</span></p>
+      </div>
+      <div class="pane">
+        <span class="slide__no"><b>14</b> · station instruments</span>
+        <h2>Every surface reads the same cache.</h2>
+        <p class="lede">
+          Waybar and the quickshell HUD are consumers, not data sources. Weather, VPN state,
+          astronomy, and theme each publish one schema-checked cache; every instrument reads it.
+        </p>
+        <p>
+          The rule that keeps it honest: <strong>no duplicate data daemons</strong>. If the bar
+          and the HUD disagree about the temperature, that is a bug in one cache, not a race
+          between two pollers. Stale and offline are explicit states with their own rendering,
+          not a blank field.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s15" data-palette="snowstorm" data-split="12" aria-label="Slide 15, progress">
+    <div class="slide__grid">
+      <div class="pane pane--rail">
+        <span class="rail-note">{stale}</span>
+      </div>
+      <div class="pane pane--tight">
+        <span class="slide__no"><b>15</b> · progress · <b>live</b></span>
+        <h2>Where it actually is.</h2>
+        <div class="split2 split2--wide">
+          <div>
+            <div class="phases">
+              {progress.phases.map((p) => (
+                <div class="phase" data-state={p.state}>
+                  <span class="n">{pad(p.n)}</span>
+                  <b>{p.title}</b>
+                  <span class="st">{p.state}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p style="font-size:.9rem">
+              <strong>{done} of {progress.phases.length} phases done.</strong> Phase state is a
+              declared human judgment. "Acceptance criteria met" is not something a script gets
+              to infer. Everything below it is automatic.
+            </p>
+            <div class="ledger">
+              {progress.recent.map((r) => (
+                <div>
+                  <span>{r.date}</span>
+                  <span class="v" data-h={r.health}>{r.verb} · {r.gen}</span>
+                  <span>{r.note}</span>
+                </div>
+              ))}
+            </div>
+            <div class="blocked">
+              {progress.blocked.map((b) => (
+                <div><b>blocked · {b.what}</b> — {b.why}</div>
+              ))}
+            </div>
+            <p class="caption" data-real={phaseState(2) === 'done' ? true : undefined}>
+              <span>{stale} · source <b>rice-progress.json</b></span>
+              {progress._seed && <span class="tag-mock">seed data · not yet host-bound</span>}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ ACT III · the point ============================ -->
+
+  <section class="slide" id="s16" data-palette="site" data-split="50" aria-label="Slide 16, the deadman">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>16</b> · the deadman</span>
+        <h2>How do you let an agent edit the machine it is <em>running on</em>?</h2>
+        <p class="lede">
+          That is the actual question. An agent working on deep internals - bootloader, kernel,
+          display stack - can sever the connection it would need to undo its own change. Ask it
+          to fix the thing, and the failure mode isn't a bad diff. It's a laptop that no longer
+          boots and no longer answers.
+        </p>
+        <p>
+          Code review doesn't help: the change is correct right up until it isn't, and by then
+          nothing is listening. So the machine gets a <strong>deadman switch</strong>. A guard is
+          armed with a ten-minute timer <em>before</em> the change, and if nobody disarms it, the
+          host restores itself to a pinned known-good closure. That covers both a hung switch and a
+          dead network equally, because both look identical from outside: silence.
+        </p>
+        <div class="callout">
+          <p>
+            Failure and <em>unknown</em> are the same outcome: don't disarm, don't retry in place,
+            let the timer fire. A machine that recovered itself is a correct result, not an
+            incident.
+          </p>
+        </div>
+      </div>
+      <div class="pane pane--tight">
+        <div class="file" style="margin-top:0">
+          <div class="file__name"><b>non-boot change</b> · the whole ritual</div>
+          <pre><code>tx=$(sudo <span class="k">station-guard arm 10</span>)
+sudo station-deploy <span class="k">test</span> "$closure"
+station-health --expect test
+<span class="c"># feature probes + screenshot review</span>
+sudo station-deploy <span class="k">switch</span> "$closure"
+station-health --expect switch
+sudo <span class="k">station-guard disarm</span> "$tx"</code></pre>
+        </div>
+        <div class="readout">
+          <div><span>invariant</span><b>switch promotes the <i>same</i> closure that passed test</b></div>
+          <div><span>on failure</span><b style="color:var(--p-err)">do not disarm</b></div>
+          <div><span>recovery</span><b>profile repaired, then runtime-only activation</b></div>
+          <div><span>gc</span><b>never — known-good pins the closure, not the generation link</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s17" data-palette="site" data-split="50" aria-label="Slide 17, the credential audit">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>17</b> · the credential audit</span>
+        <h2>A passing dry run counts as a <em>failure</em>.</h2>
+        <p class="lede">
+          The whole machine is a git repository. Every package, service, keybind and color is
+          declared in Nix, so a rebuild reads the repo and produces a byte-identical system. 
+          <code class="mono">nixbox</code> is <em>compiled</em>, not accumulated.
+        </p>
+        <p>
+          That is the reproducibility win, and it hands you the security problem attached to it:
+          the repo can now rewrite the machine. So nixbox pulls with <strong>repository-scoped,
+          read-only deploy keys</strong>. It can read its own configuration and cannot write
+          back. Proving they are read-only is where the trust-boundary thinking shows up.
+        </p>
+        <p>
+          Push a unique ref with <code class="mono">--dry-run</code> through each alias and require
+          an <strong>explicit permission rejection</strong>. If git answers
+          <code class="mono">Everything up-to-date</code>, the probe proved nothing — it never
+          reached the permission check. A successful fetch proves nothing either.
+        </p>
+        <p>
+          The default GitHub credential path is configured to fail closed before any key is
+          installed, and a fresh clone that misses the local override is <em>supposed</em> to
+          fail. Never retry through the default host or a forwarded agent.
+        </p>
+      </div>
+      <div class="pane pane--tight">
+        <div class="file" style="margin-top:0">
+          <div class="file__name"><b>read-only proof</b> · both aliases</div>
+          <pre><code>$ git push --dry-run parent HEAD:probe-x
+<span class="e">remote: Permission denied to deploy key</span>
+<span class="s">✓ rejected — this is the pass</span>
+
+$ git push --dry-run child HEAD:probe-x
+<span class="c">Everything up-to-date</span>
+<span class="e">✗ FAIL — proves nothing, never
+  reached the permission check</span></code></pre>
+        </div>
+        <div class="callout">
+          <p>
+            The same instinct as a protocol audit: an assertion that passes for the wrong reason
+            is worse than no assertion, because it retires the question.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s18" data-palette="site" data-split="50" aria-label="Slide 18, close">
+    <div class="slide__grid">
+      <div class="pane">
+        <span class="slide__no"><b>18</b> · close</span>
+        <h2>Shipped, and <em>specced</em>.</h2>
+        <p class="lede">
+          One machine is finished and drives daily. One is a spec with more and more phases landing. 
+          This page says so on every slide rather than in a footnote.
+        </p>
+        <p>
+          The thesis holds in both directions. Whether the arrow points from the machine to the
+          repo or from the repo to the machine, there is exactly one place a color is defined,
+          and everything else is generated, tested, and reversible.
+        </p>
+        <a class="exit-link" href="/#work">← back to wschwab.xyz</a>
+      </div>
+      <div class="pane pane--tight">
+        <div class="versus" style="grid-template-columns:1fr 1fr">
+          <div><div class="k">archbox · shipped</div><div class="v" style="color:var(--p-ok)">daily driver</div></div>
+          <div><div class="k">nixbox · specced</div><div class="v" style="color:var(--p-warn)">phase {progress.phase.current} of {progress.phase.total}</div></div>
+          <div><div class="k">palette source</div><div class="v">colors.lua</div></div>
+          <div><div class="k">palette source</div><div class="v">palette.nix</div></div>
+          <div><div class="k">direction</div><div class="v">live → repo</div></div>
+          <div><div class="k">direction</div><div class="v">repo → live</div></div>
+          <div><div class="k">recovery</div><div class="v">restore-all</div></div>
+          <div><div class="k">recovery</div><div class="v">deadman + known-good</div></div>
+        </div>
+        <p class="caption" data-real><span>{stale} · this page rebuilds daily and recomputes its own status</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- deck chrome -->
+  <div class="deck__wipe" id="wipe" aria-hidden="true"></div>
+  <div class="deck__spine" aria-hidden="true">
+    <nav class="deck__rail" id="rail" aria-label="Slide navigation"></nav>
+  </div>
+
+  <div class="deck__bar">
+    <span class="deck__machine" id="bar-machine">wschwab.xyz</span>
+    <span class="sep">·</span>
+    <span><b id="bar-n">00</b> / {pad(slides.length - 1)}</span>
+    <span class="grow"></span>
+    <button type="button" id="toggle-view" aria-pressed="false">read as one page</button>
+    <span class="sep">·</span>
+    <button type="button" id="help-btn" aria-haspopup="dialog">?</button>
+    <span class="sep">·</span>
+    <a href="/#work">esc → site</a>
+  </div>
+
+  <div class="help" id="help" hidden role="dialog" aria-modal="true" aria-label="Keyboard help">
+    <div class="help__panel">
+      <h2>Moving around</h2>
+      <dl>
+        <dt>← →</dt><dd>previous / next slide</dd>
+        <dt>space</dt><dd>next slide</dd>
+        <dt>home / end</dt><dd>first / last slide</dd>
+        <dt>swipe</dt><dd>horizontal, on touch</dd>
+        <dt>esc</dt><dd>back to the site</dd>
+        <dt>?</dt><dd>this panel</dd>
+      </dl>
+      <p style="margin-top:1.2rem;font-size:.86rem">
+        Every slide is deep-linkable — <code class="mono">/rice/#7</code> opens slide 7 and
+        survives a refresh. Prefer to scroll? Use <strong>read as one page</strong>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ meta: slides, machineOf }}>
+(() => {
+  const deck = document.getElementById('deck');
+  const wipe = document.getElementById('wipe');
+  const rail = document.getElementById('rail');
+  const help = document.getElementById('help');
+  const bar = { n: document.getElementById('bar-n'), m: document.getElementById('bar-machine') };
+  const slides = [...deck.querySelectorAll('.slide')];
+  const last = slides.length - 1;
+  const pad = (n) => String(n).padStart(2, '0');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  let i = -1, wipeTimers = [];
+
+  /* Deck mode is opt-out: with no JS the page below stays a plain readable
+     document, which is also the "read as one page" view. */
+  const PAGE = 'page', DECK = 'deck';
+  let view = (location.search.includes('view=page') || localStorage.getItem('rice-view') === PAGE)
+    ? PAGE : DECK;
+
+  for (let k = 0; k <= last; k++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', `Slide ${pad(k)}`);
+    b.addEventListener('click', () => go(k));
+    rail.append(b);
+  }
+  const ticks = [...rail.children];
+
+  function paint(next, sx) {
+    const cur = deck.dataset.palette;
+    deck.style.setProperty('--sx', sx + '%');
+    if (cur === next) return;
+    if (reduce.matches || view === PAGE) { deck.dataset.palette = next; return; }
+
+    /* the wipe: a band of the incoming palette grown out of the spine */
+    wipeTimers.forEach(clearTimeout); wipeTimers = [];
+    wipe.dataset.palette = next;
+    delete wipe.dataset.run; delete wipe.dataset.fade;
+    wipe.style.setProperty('--wipe-l', sx + '%');
+    wipe.style.setProperty('--wipe-r', (100 - sx) + '%');
+    void wipe.offsetWidth;
+    wipe.dataset.run = '';
+    wipe.style.setProperty('--wipe-l', '0%');
+    wipe.style.setProperty('--wipe-r', '0%');
+    wipeTimers.push(setTimeout(() => {
+      deck.dataset.palette = next;
+      wipe.dataset.fade = '';
+    }, 300));
+    wipeTimers.push(setTimeout(() => {
+      delete wipe.dataset.run; delete wipe.dataset.fade;
+    }, 760));
+  }
+
+  function go(k, push = true) {
+    k = Math.max(0, Math.min(last, k));
+    if (k === i) return;
+    i = k;
+    const m = meta[k];
+    slides.forEach((s, n) => n === k ? s.setAttribute('data-active', '') : s.removeAttribute('data-active'));
+    ticks.forEach((t, n) => t.setAttribute('aria-current', n === k ? 'true' : 'false'));
+    bar.n.textContent = pad(k);
+    bar.m.textContent = machineOf[m.palette];
+    paint(m.palette, m.split);
+    if (push && location.hash !== '#' + k) history.pushState({ k }, '', '#' + k);
+    if (view === DECK) slides[k].querySelector('.pane')?.scrollTo(0, 0);
+  }
+
+  function setView(v, remember = true) {
+    view = v;
+    if (remember) localStorage.setItem('rice-view', v);
+    const on = v === DECK;
+    deck.setAttribute('data-view', on ? DECK : PAGE);
+    document.getElementById('toggle-view').textContent = on ? 'read as one page' : 'back to the deck';
+    document.getElementById('toggle-view').setAttribute('aria-pressed', String(!on));
+    document.documentElement.style.overflow = on ? 'hidden' : '';
+    if (on) { const k = i < 0 ? fromHash() : i; i = -1; go(k, false); }
+    else {
+      slides.forEach((s) => s.removeAttribute('data-active'));
+      deck.dataset.palette = 'site';
+      deck.style.removeProperty('--sx');
+      /* only jump to a slide when leaving the deck mid-way; a fresh load in
+         page view starts at the masthead like any other document */
+      if (i > 0) document.getElementById('s' + i)?.scrollIntoView();
+    }
+  }
+
+  const fromHash = () => {
+    const n = parseInt(location.hash.slice(1), 10);
+    return Number.isInteger(n) && n >= 0 && n <= last ? n : 0;
+  };
+
+  setView(view, false);
+
+  addEventListener('popstate', () => { if (view === DECK) go(fromHash(), false); });
+
+  document.getElementById('toggle-view').addEventListener('click', () => setView(view === DECK ? PAGE : DECK));
+  document.getElementById('help-btn').addEventListener('click', () => toggleHelp(true));
+  help.addEventListener('click', () => toggleHelp(false));
+  function toggleHelp(on) {
+    help.hidden = !on;
+    if (on) help.querySelector('.help__panel').focus?.();
+  }
+
+  addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === '?' || (e.key === '/' && e.shiftKey)) { e.preventDefault(); toggleHelp(help.hidden); return; }
+    if (e.key === 'Escape') { if (!help.hidden) { toggleHelp(false); return; } location.href = '/#work'; return; }
+    if (view !== DECK) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': e.preventDefault(); go(i + 1); break;
+      case ' ': e.preventDefault(); go(i + 1); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); go(i - 1); break;
+      case 'Home': e.preventDefault(); go(0); break;
+      case 'End': e.preventDefault(); go(last); break;
+    }
+  });
+
+  /* horizontal swipe only — vertical scroll inside a pane is never trapped */
+  let sx = 0, sy = 0, tracking = false;
+  deck.addEventListener('touchstart', (e) => {
+    if (view !== DECK || e.touches.length !== 1) return;
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; tracking = true;
+  }, { passive: true });
+  deck.addEventListener('touchend', (e) => {
+    if (!tracking) return; tracking = false;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy) * 1.6) go(dx < 0 ? i + 1 : i - 1);
+  }, { passive: true });
+})();
+</script>

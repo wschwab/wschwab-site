@@ -1,0 +1,109 @@
+/* =========================================================================
+   WORLD: CRT oscilloscope signal bench  ·  the runner-up, built for comparison
+
+   The deck as an instrument bench. Slides are channels measured against one
+   etched graticule; the guard is an armed trigger and amber is reserved for
+   armed and warning states, exactly as it is on the bench. "Armed" is the
+   deadman's own vocabulary, which is why this challenger nearly won the roll.
+
+   Known weakness, stated rather than hidden: phosphor-green-on-black is the
+   terminal-CRT rut this deck was supposed to refuse, and the green/amber frame
+   sits uneasily beside all four machine palettes.
+   ========================================================================= */
+@import './deck-core.css';
+
+@font-face{font-family:'Term3270';font-weight:400;font-display:swap;
+  src:url('/fonts/term3270-400.woff2') format('woff2')}
+@font-face{font-family:'FiraCond';font-weight:400;font-display:swap;
+  src:url('/fonts/fira-condensed-400.woff2') format('woff2')}
+@font-face{font-family:'FiraCond';font-weight:700;font-display:swap;
+  src:url('/fonts/fira-condensed-700.woff2') format('woff2')}
+@font-face{font-family:'Iosk';font-weight:400;font-display:swap;
+  src:url('/fonts/iosk-400.woff2') format('woff2')}
+
+.deck {
+  --p-display: 'FiraCond', 'Arial Narrow', sans-serif;
+  --p-data: 'Term3270', ui-monospace, monospace;
+  --p-body: 'FiraCond', system-ui, sans-serif;
+  --div: 10;         /* graticule divisions, as on a real bezel */
+  --glow: 0 0 8px;
+}
+
+/* the frame: near-black glass, phosphor trace, etched graticule, amber armed */
+[data-palette="site"] {
+  --p-bg:#0A0E0C; --p-surface:#101710; --p-raised:#182116; --p-line:#2B3C29;
+  --p-text:#CFE8C8; --p-dim:#89A883;
+  --p-accent:#3BF04A; --p-accent-ink:#5CF56A; --p-accent-2:#FFB000;
+  --p-ok:#3BF04A; --p-warn:#FFB000; --p-err:#FF5A3C;
+}
+
+/* ---- the graticule: ten divisions, etched under everything ---- */
+.deck::before {
+  content: ""; position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--p-line) 70%, transparent) 0 1px, transparent 1px calc(100% / var(--div))),
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--p-line) 70%, transparent) 0 1px, transparent 1px calc(100% / var(--div)));
+  background-size: calc(100% / var(--div)) 100%, 100% calc(100% / var(--div));
+  opacity: .5;
+}
+/* the machine acts are the signal under test: graticule recedes over them */
+.deck:not([data-palette="site"])::before { opacity: .16 }
+
+/* ---- phosphor: the accent has persistence, everything else is silkscreen ---- */
+.slide h2, .deck__masthead h1 {
+  text-transform: uppercase; font-weight: 700; letter-spacing: .005em; line-height: 1;
+}
+.deck__masthead h1 { font-size: clamp(2.4rem, 7.5vw, 5rem) }
+.slide h2 { font-size: clamp(1.7rem, 4vw, 3.1rem) }
+.slide h2 em, .deck__masthead h1 em { font-style: normal; color: var(--p-accent) }
+.deck:not([data-palette="snowstorm"]) .slide h2 em,
+.deck:not([data-palette="snowstorm"]) .deck__masthead h1 em {
+  text-shadow: var(--glow) color-mix(in srgb, var(--p-accent) 55%, transparent);
+}
+.deck:not([data-palette="snowstorm"]) .slide h3,
+.deck:not([data-palette="snowstorm"]) .slide__no b {
+  text-shadow: var(--glow) color-mix(in srgb, var(--p-accent) 35%, transparent);
+}
+
+/* readouts are the 3270 face, tracked like a bezel silkscreen */
+.slide__no, .rail-note, .deck__bar, .caption, .file__name, .hud__label {
+  letter-spacing: .2em; text-transform: uppercase;
+}
+.deck:not([data-palette="snowstorm"]) .hud__clock,
+.deck:not([data-palette="snowstorm"]) .readout b {
+  text-shadow: var(--glow) color-mix(in srgb, var(--p-accent) 30%, transparent);
+}
+
+/* ---- bezel panels: etched, inset, never floating ---- */
+.file, .callout, .hud__p, .pipe__step, .versus, .arrow-row, .shot, .dm {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p-text) 8%, transparent);
+}
+.callout { border-top-color: var(--p-accent-2) }
+
+/* amber is armed / warning only — the bench's own convention. Confined to the
+   dark frame: Snow Storm's light ground keeps its own contrast-tested values,
+   and a phosphor glow over #ECEFF4 fails both contrast and the fiction. */
+.deck:not([data-palette="snowstorm"]) .tag-mock {
+  border-color: var(--p-accent-2); color: var(--p-accent-2);
+  text-shadow: var(--glow) color-mix(in srgb, var(--p-accent-2) 40%, transparent);
+}
+.deck:not([data-palette="snowstorm"]) .caption::before { box-shadow: var(--glow) currentColor }
+
+/* ---- the spine is the graticule centreline, with minor ticks ---- */
+.deck__spine::before {
+  width: 1px; background: color-mix(in srgb, var(--p-accent) 40%, var(--p-line));
+  box-shadow: 0 0 6px color-mix(in srgb, var(--p-accent) 25%, transparent);
+}
+.deck__rail button {
+  background: var(--p-accent); opacity: .3; width: 5px;
+}
+.deck__rail button[aria-current="true"] {
+  opacity: 1; box-shadow: 0 0 7px color-mix(in srgb, var(--p-accent) 70%, transparent);
+}
+
+/* trace: the active slide sweeps in from the trigger point, once */
+[data-view="deck"] .slide[data-active] .pane > * { animation: sweep 420ms ease-out both }
+@keyframes sweep { from { opacity: 0; transform: translateX(-6px) } to { opacity: 1; transform: none } }
+@media (prefers-reduced-motion: reduce) {
+  [data-view="deck"] .slide[data-active] .pane > * { animation: none }
+}

@@ -1,0 +1,38 @@
+---
+import '../../styles/world-riso.css';
+import Deck from '../../layouts/Deck.astro';
+import RiceDeck from '../../components/RiceDeck.astro';
+
+const contract = `IMPECCABLE DIRECTION CONTRACT — /rice/ · direction seed 3856f232 · mode: experience
+
+THESIS: The rice writeup as the zine the scene actually prints. Refuses the dark
+product-page frame; the machines are the ink, the frame is paper.
+
+OWN-WORLD: Newsprint stock #EFE9DA, ink black #1A1A18, riso federal blue #3D5588,
+fluorescent pink #FF48B0 — chosen because it rhymes with Cyberdream's #ff007c, so
+the frame hands off into Act I rather than fighting it. Fira Sans Compressed 900
+caps for display, Iosevka for all data, Fira Condensed for body. 2px ink rules,
+halftone screen over every ground, registration marks at the plate corners, the
+spine set as the zine's fold. Machine palettes unchanged.
+
+STORY: A visitor reads a printed artifact about two machines, feels the press run
+change ink at each act, and leaves knowing the discipline was engineering, not
+decoration.
+
+FIRST VIEWPORT: Even 50/50 fold. Heavy condensed caps break across the divider
+with a second-ink misregistration; two machine plates below; the arrow-key
+affordance set as a printer's registration mark.
+
+FORM: split spine (surface seed 24fb6c50) inside direction candidate 7, assigned
+by seed 3856f232. Grain and misregistration stay on grounds and illustration,
+never under type — the subject is contrast rigor.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md`;
+---
+<Deck
+  title="Two machines"
+  description="Risograph-zine world for the /rice/ deck. Two desktop rices, each act printed in its own machine's inks."
+  contract={contract}
+>
+  <RiceDeck />
+</Deck>

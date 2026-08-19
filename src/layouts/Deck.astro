@@ -1,0 +1,23 @@
+---
+import Head from './Head.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  /* Direction contract, emitted as the first child of <body> so it survives
+     the production build and stays auditable. Each world supplies its own. */
+  contract: string;
+}
+const { title, description, ogImage, contract } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <Head title={title} description={description} ogImage={ogImage} />
+</head>
+<body>
+<Fragment set:html={`<!--\n${contract}\n-->`} />
+<slot />
+</body>
+</html>

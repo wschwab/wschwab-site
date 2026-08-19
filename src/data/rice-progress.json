@@ -1,0 +1,89 @@
+{
+  "_seed": true,
+  "_note": "Hand-updated 2026-08-17 from the canonical repo ~/Projects/rice/snow-station (branch phase/3-artwork-pipeline) and its committed docs: IMPLEMENTATION-v3.md §13 for phase definitions, PHASE5-MEASUREMENTS.md for generation 36 and the measured budgets, and the 2026-08-14 owner amendment for the ESP/known-good corrections. Phase states are declared human judgment read off those docs, NOT host truth: this site host is not nixbox, so /var/lib/station ledgers were unreadable and generation numbers come from committed prose rather than deployments.jsonl (only gens 22 and 36 are documented; no row is listed for a generation the docs do not name). Set _seed to false once ./rice-progress binds this to the real nixbox ledger; the deck renders a 'seed data' marker while it is true. The commercial VPN provider is deliberately not named here: the deck is public and the provider in use is private information. Phase 6 is 'provider-neutral VPN' in the spec anyway, so the neutral wording is also the more accurate one.",
+  "updated": "2026-08-17T17:42:00Z",
+  "phase": {
+    "current": 5,
+    "total": 8,
+    "label": "shared instruments, signature features"
+  },
+  "phases": [
+    {
+      "n": 0,
+      "title": "repo migration, contracts, safety plane",
+      "state": "done"
+    },
+    {
+      "n": 1,
+      "title": "flake/HM parity and palette",
+      "state": "done"
+    },
+    {
+      "n": 2,
+      "title": "safe core desktop",
+      "state": "done"
+    },
+    {
+      "n": 3,
+      "title": "astronomy, artwork, solar wallpaper",
+      "state": "done"
+    },
+    {
+      "n": 4,
+      "title": "terminal, applications, VPN consumer",
+      "state": "done"
+    },
+    {
+      "n": 5,
+      "title": "shared instruments, signature features",
+      "state": "active"
+    },
+    {
+      "n": 6,
+      "title": "provider-neutral VPN",
+      "state": "pending"
+    },
+    {
+      "n": 7,
+      "title": "ReGreet rollout, human validation",
+      "state": "pending"
+    }
+  ],
+  "recent": [
+    {
+      "date": "2026-08-17",
+      "verb": "switch",
+      "gen": 36,
+      "health": "ok",
+      "note": "niri workspaces + instrument row finally on screen"
+    },
+    {
+      "date": "2026-08-17",
+      "verb": "test",
+      "gen": 36,
+      "health": "ok",
+      "note": "astro status split: 1.9 s compute -> 6 ms cache read"
+    },
+    {
+      "date": "2026-08-14",
+      "verb": "recover",
+      "gen": 22,
+      "health": "recovered",
+      "note": "gens 4+ had no ESP entry; boot staging amended in"
+    }
+  ],
+  "blocked": [
+    {
+      "what": "Kanata",
+      "why": "implemented but disabled; needs a timed physical keyboard trial"
+    },
+    {
+      "what": "remote backup",
+      "why": "Restic/B2 architecture decided, endpoint not yet named"
+    },
+    {
+      "what": "VPN adapter",
+      "why": "provider adapter is build-only; no install, auth, or live test"
+    }
+  ]
+}

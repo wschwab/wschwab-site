@@ -1,0 +1,50 @@
+---
+/* Alternate /rice/ world: site-native.
+ *
+ * GATED. getStaticPaths emits this page only when `published` is true for
+ * 'site' in src/data/rice-worlds.ts; otherwise it returns no paths and the
+ * URL genuinely 404s. That matters here because a publish is pinned to IPFS
+ * and cannot be taken back, so "not ready" must mean "not routable".
+ *
+ * TO PUBLISH: set published: true for 'site' in src/data/rice-worlds.ts and
+ * run `npm run build`. That is the entire change — this file needs no edit.
+ *
+ * The riso world is the flagship and lives at /rice/ itself.
+ */
+import '../../../styles/world-site.css';
+import Deck from '../../../layouts/Deck.astro';
+import RiceDeck from '../../../components/RiceDeck.astro';
+import { isPublished } from '../../../data/rice-worlds';
+
+export function getStaticPaths() {
+  return isPublished('site') ? [{ params: { gate: undefined } }] : [];
+}
+
+const contract = `IMPECCABLE DIRECTION CONTRACT — /rice/ · surface seed 24fb6c50 · mode: experience
+
+THESIS: Two machines that disagree about which way the arrow points, built on one
+conviction. Refuses the full-bleed screenshot carousel every rice writeup ships.
+
+OWN-WORLD: Site continuation — Instrument Serif display, JetBrains Mono data, the
+site's ink/amber frame. One vertical divider is the permanent geometry; its x
+position IS the act. Four palettes bound to real hosts, transcribed from
+colors.lua and IMPLEMENTATION-v3.md §4.1, never reinterpreted.
+
+STORY: A visitor sees two opposite machines, learns a rice is a build with one
+source of truth, watches the deck become each machine, and leaves knowing
+security-engineering discipline was applied to dotfiles.
+
+FIRST VIEWPORT: Even 50/50 split. Desktop left, laptop right, serif headline
+spanning the spine, arrow-key affordance bottom-left of pane A.
+
+FORM: split spine — candidate 3 of the derived list, assigned by seed 24fb6c50.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md`;
+---
+<Deck
+  title="Two machines — site"
+  description="Site-native world for the /rice/ deck."
+  contract={contract}
+>
+  <RiceDeck />
+</Deck>
