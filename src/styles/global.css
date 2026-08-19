@@ -105,6 +105,11 @@ h2.title em{color:var(--amber-bright);font-style:italic}
 .card p{color:var(--muted);font-size:.93rem;flex:1}
 .card .go{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;color:var(--amber);margin-top:.4rem;transition:color .25s}
 .card:hover .go{color:var(--amber-bright)}
+/* centered 'see all' affordance under a card grid. The link already existed
+   inside .work-note, but at .72rem muted mono at the end of a comment line
+   it read as part of the note rather than as a control. */
+.more{margin-top:2rem;display:flex;justify-content:center}
+.more .btn{font-family:var(--mono);font-size:.75rem}
 .work-note{margin-top:1.6rem;font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.04em}
 .work-note b{color:var(--cyan);font-weight:400}
 .work-note a{border-bottom:1px dotted rgba(92,214,232,.4);transition:color .25s}

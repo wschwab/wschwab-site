@@ -8,7 +8,6 @@ summary: >-
   I run things to understand them: Ethereum nodes and an indexer, IPFS and
   Swarm, Radicle. Lately I've been working on the AI stack: harnesses, skills,
   MCP, local models via ollama and vLLM, libre frontends.
-featured: 6
 ---
 
 I run things to understand them: Ethereum nodes and an indexer, IPFS and Swarm,

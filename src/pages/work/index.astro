@@ -15,7 +15,7 @@ const work = (await getCollection('work', (e) => !e.data.draft))
       </div>
       <div class="cards">
         {work.map((item) => (
-          <a class="card" href={item.data.external ?? `/work/${item.id}/`}>
+          <a class="card" href={item.data.internal ?? item.data.external ?? `/work/${item.id}/`}>
             <div class="tags">
               {item.data.tags.map((t) => <span>{t}</span>)}
               {item.data.soft_tags.map((t) => <span class="warn">{t}</span>)}

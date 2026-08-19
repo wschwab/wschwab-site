@@ -98,7 +98,7 @@ const substack = await latestSubstackPost();
       <div class="sec-head reveal"><span class="eyebrow">Selected Work</span></div>
       <div class="cards">
         {work.map((item) => (
-          <a class="card reveal" href={item.data.external ?? `/work/${item.id}/`}>
+          <a class="card reveal" href={item.data.internal ?? item.data.external ?? `/work/${item.id}/`}>
             <div class="tags">
               {item.data.tags.map((t) => <span>{t}</span>)}
               {item.data.soft_tags.map((t) => <span class="warn">{t}</span>)}
@@ -109,7 +109,8 @@ const substack = await latestSubstackPost();
           </a>
         ))}
       </div>
-      <p class="work-note reveal">// each card opens a full case-study page — <b>projects are markdown files</b>: add one, push, it appears. <a href="/work/">all work →</a></p>
+      <div class="more reveal"><a class="btn ghost" href="/work/">see all work →</a></div>
+      <p class="work-note reveal">// each card opens a full case-study page — <b>projects are markdown files</b>: add one, push, it appears.</p>
     </section>
 
     <section id="writing">
@@ -132,7 +133,8 @@ const substack = await latestSubstackPost();
           </a>
         ))}
       </div>
-      <p class="work-note reveal">// also on air: <b><a href="https://www.youtube.com/watch?v=58eKnYR_EyM">Solidity Fridays</a></b> livestreams with transmissions11 · the <b><a href="https://open.spotify.com/episode/2baQnYpheB8ol9Kk9fMUCl">Cat Herders podcast</a></b> — the samczsun episode · <a href="/writing/">full archive →</a></p>
+      <div class="more reveal"><a class="btn ghost" href="/writing/">read the full archive →</a></div>
+      <p class="work-note reveal">// also on air: <b><a href="https://www.youtube.com/watch?v=58eKnYR_EyM">Solidity Fridays</a></b> livestreams with transmissions11 · the <b><a href="https://open.spotify.com/episode/2baQnYpheB8ol9Kk9fMUCl">Cat Herders podcast</a></b> — the samczsun episode</p>
     </section>
 
     <section id="contact">

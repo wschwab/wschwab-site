@@ -6,3 +6,7 @@ dist/
 .impeccable/
 agent-docs/
 
+# a literal ~ dir: created when a tool expands ~ as a relative path.
+# It once caught an 844K agent session transcript that was tracked and would
+# have shipped to GitHub + IPFS. Never commit it.
+/~/

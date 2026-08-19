@@ -13,6 +13,7 @@ const work = defineCollection({
     featured: z.number().int().min(1).max(6).optional(), // landing slot order
     cta: z.string().default('read case study →'),
     external: z.string().url().optional(), // card links out instead of /work/<slug>/
+    internal: z.string().startsWith('/').optional(), // card links to an on-site route (e.g. /rice/)
     links: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
     draft: z.boolean().default(false),
   }),
