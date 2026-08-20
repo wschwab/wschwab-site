@@ -1,0 +1,18 @@
+---
+// A page of the record: line numbering restarts here, so a page's coordinates
+// never move when another page changes.
+interface Props {
+  id: string;
+  title: string;
+  folio?: number | string;
+  class?: string;
+}
+const { id, title, folio, class: cls } = Astro.props;
+---
+<section class:list={['page', cls]} id={id} aria-labelledby={`${id}-h`}>
+  <header class="page-head">
+    <h2 id={`${id}-h`}>{title}</h2>
+    {folio !== undefined && <span class="folio">Page {folio}</span>}
+  </header>
+  <slot />
+</section>

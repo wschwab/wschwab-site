@@ -1,0 +1,155 @@
+---
+import { getCollection } from 'astro:content';
+import Record from '../../layouts/Record.astro';
+import Page from '../../components/record/Page.astro';
+import Ln from '../../components/record/Ln.astro';
+import { latestSubstackPost } from '../../lib/substack';
+import { at, exhibitOrder, PARENS } from '../../lib/record';
+
+const allWork = exhibitOrder(await getCollection('work', (e) => !e.data.draft));
+const exhibitNo = new Map(allWork.map((e, i) => [e.id, i + 1]));
+const featured = allWork.filter((e) => e.data.featured).slice(0, 6);
+const writing = (await getCollection('writing', (e) => !e.data.draft && e.data.featured))
+  .sort((a, b) => a.data.featured! - b.data.featured!)
+  .filter((e) => e.data.featured !== 1);
+const substack = await latestSubstackPost();
+
+const docket = [
+  { filed: 'now →', entry: 'Independent', text: 'Consulting, advising, and writing — smart contracts first, but the door is open. Essays at wschwab.substack.com.' },
+  { filed: '2026', entry: 'ViFi', text: 'Smart contracts lead — pre-launch roadmap, production readiness, founder-facing guidance.' },
+  { filed: '2024 – 2025', entry: 'Alchemix', text: 'Engineering manager — v3: core, strategies, governance, and a gauntlet of audits.' },
+  { filed: '2022 – 2023', entry: 'Polygon Labs', text: "Smart contract team lead / engineering manager — built and ran the team serving (almost) all of Polygon's smart contract needs." },
+  { filed: '2020 – 2022', entry: 'Linum Labs', text: 'Web3 engineer, promoted to Solidity team lead — client work across the EVM stack.' },
+  { filed: '2019 – 2023', entry: 'Ethereum Cat Herders', text: 'Wrangler, then Catblazer — EIP process, official note-taker for All Core Devs, podcast host, multisig signer.' },
+  { filed: '2018', entry: 'Materials.Zone', text: 'Junior Blockchain engineer — decentralized data marketplace, governance research, mechanism design.' },
+  { filed: '2017', entry: 'Down the Rabbit Hole', text: 'ML coursework and an economics degree collide with Ethereum.' },
+];
+const href = (e: (typeof allWork)[number]) => e.data.internal ?? e.data.external ?? at(`/work/${e.id}/`);
+---
+<Record folio={6}>
+  <section class="page page-caption" id="caption" aria-label="Caption">
+    <div class="caption">
+      <div class="name-wrap"><h1 class="name"><span>William</span> <span>Schwab</span></h1></div>
+      <div class="caption-grid">
+        <p class="party">Smart contract developer<br> and engineering leader,<br> independent.</p>
+        <div class="paren" aria-hidden="true"><span>{PARENS}</span></div>
+        <p class="matter">Ethereum, 2017 – present.<br> Protocol engineering, governance,<br> coordination, security.</p>
+      </div>
+    </div>
+
+    <Ln class="lead">
+      <p><strong>I build smart contracts — and the teams that ship them.</strong>
+        Nine years across the Ethereum ecosystem: protocol engineering, governance, coordination.
+        These days I'm independent — consulting, advising, building — rooted in the EVM, and curious well beyond it.</p>
+    </Ln>
+
+    <nav class="index" aria-label="Index">
+      <ol>
+        <li class="primary"><a href="#exhibits"><span class="index-t">Exhibits</span><span class="index-d">six selected works</span><span class="index-l"></span><span class="index-p">Page 4</span></a></li>
+        <li><a href="#testimony"><span class="index-t">Testimony</span><span class="index-d">who, and why</span><span class="index-l"></span><span class="index-p">Page 2</span></a></li>
+        <li><a href="#docket"><span class="index-t">Docket</span><span class="index-d">2017 to now</span><span class="index-l"></span><span class="index-p">Page 3</span></a></li>
+        <li><a href="#writings"><span class="index-t">Writings</span><span class="index-d">essays, occasionally</span><span class="index-l"></span><span class="index-p">Page 5</span></a></li>
+        <li><a href="#certificate"><span class="index-t">Certificate</span><span class="index-d">contact</span><span class="index-l"></span><span class="index-p">Page 6</span></a></li>
+      </ol>
+    </nav>
+  </section>
+
+  <div class="spread">
+  <div class="spread-main">
+  <Page id="testimony" title="Testimony" folio={2}>
+    <Ln>
+      <p class="lead"><strong>Technology should serve <em>everyone it touches.</em></strong></p>
+    </Ln>
+    <Ln>
+      <p><span class="speaker">Mr. Schwab:</span> What pulled me into blockchain in 2017 is the same thing pulling me now:
+        the conviction that powerful technology should deliver <strong>maximal positive impact</strong>.</p>
+    </Ln>
+    <Ln>
+      <p>I've spent those years writing Solidity and shipping protocols — and building the
+        <strong>teams</strong> that do: leading the Solidity team at Linum Labs, then Polygon's
+        smart contracts team as <strong>engineering manager</strong>, then shepherding Alchemix through development and audits. Today I
+        <strong>freelance, consult, and advise</strong>. Alongside all of it, four-plus years with the
+        <strong>Ethereum Cat Herders</strong> — governance, the EIP process, coordinating official note-taking
+        for All Core Devs.</p>
+    </Ln>
+    <Ln>
+      <p class="insertion">(Also: EthernautDAO alum, former Cat Herders multisig
+        signer, and an anon StackExchange account with 2,500+ rep that I'll never link here.)</p>
+    </Ln>
+    <Ln>
+      <p>I still think decentralization is wildly under-explored and under-rated — <em>permissionless applications,
+        decentralized storage, social media nobody owns.</em> And I'm circling back to an old
+        interest: my ML coursework predates the smart contracts — 2017, before Ethereum pulled me
+        in. I'm not claiming a research career. <em>Yet.</em> For now, I'll be posting my thoughts and progress on Substack.</p>
+    </Ln>
+  </Page>
+
+  <Page id="docket" title="Docket" folio={3}>
+    <div class="docket">
+      <table>
+        <caption class="sr">Career docket, newest entry first</caption>
+        <thead><tr><th scope="col">No.</th><th scope="col">Filed</th><th scope="col">Entry</th></tr></thead>
+        <tbody>
+          {docket.map((d, i) => (
+            <tr>
+              <td>{docket.length - i}</td>
+              <td class="filed">{d.filed}</td>
+              <td><b>{d.entry}.</b> {d.text}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </Page>
+  </div>
+
+  <div class="spread-side">
+  <Page id="exhibits" title="Exhibits" folio={4}>
+    <div class="exhibits">
+      <div class="stack">
+        {featured.map((item) => (
+          <article class="exhibit">
+            <div class="sticker" aria-hidden="true"><span>Exhibit</span><b>{exhibitNo.get(item.id)}</b></div>
+            <h3><a href={href(item)}><span class="sr">Exhibit {exhibitNo.get(item.id)}: </span>{item.data.title}</a></h3>
+            <p class="ex-meta">{item.data.role} · {item.data.period}</p>
+            <p class="ex-sum">{item.data.summary}</p>
+            <p class="ex-tags">
+              {item.data.tags.join(' · ')}
+              {item.data.soft_tags.length > 0 && <span class="ex-soft"> ({item.data.soft_tags.join(', ')})</span>}
+            </p>
+            <span class="ex-cta" aria-hidden="true">{item.data.cta}</span>
+          </article>
+        ))}
+      </div>
+    </div>
+    <div class="more">
+      <p><a href={at('/work/')}>The full index of exhibits</a>
+        <span class="insertion">(Each exhibit is one markdown file; add one, push, and it is entered into the record.)</span></p>
+    </div>
+  </Page>
+  </div>
+  </div>
+
+  <Page id="writings" title="Writings" folio={5}>
+    <Ln class="writ">
+      <h3><a href={substack.url}>{substack.title}</a></h3>
+      <p>{substack.summary}</p>
+      <Fragment slot="aside">Substack · latest{substack.date && <><br>{substack.date}</>}</Fragment>
+    </Ln>
+    {writing.map((e) => (
+      <Ln class="writ">
+        <h3><a href={e.data.url}>{e.data.title}</a></h3>
+        <p>{e.data.summary}</p>
+        <Fragment slot="aside">{e.data.kind}{e.data.date && <><br>{e.data.date.getUTCFullYear()}</>}</Fragment>
+      </Ln>
+    ))}
+    <Ln>
+      <p class="insertion">(Also on the air: <a href="https://www.youtube.com/watch?v=58eKnYR_EyM">Solidity Fridays</a> livestreams
+        with transmissions11, and the <a href="https://open.spotify.com/episode/2baQnYpheB8ol9Kk9fMUCl">Cat Herders podcast</a> —
+        the samczsun episode.)</p>
+    </Ln>
+    <div class="more">
+      <p><a href={at('/writing/')}>The full archive of writings</a></p>
+    </div>
+  </Page>
+</Record>

@@ -1,0 +1,16 @@
+---
+import Record from '../../layouts/Record.astro';
+import { at } from '../../lib/record';
+---
+<Record title="Not in the record">
+  <div class="notfound">
+    <p class="code404" aria-hidden="true">404</p>
+    <h1 class="record-title">Not in the record.</h1>
+    <p class="insertion" style="margin-top:1rem">(Whereupon, the page requested at <span class="path" id="path">this address</span> could not be located in this edition of the record.)</p>
+    <p style="margin-top:1.5rem"><a href={at('/')}>Return to the front of the record</a> · <a href={at('/work/')}>Index of exhibits</a></p>
+  </div>
+  <script>
+    const p = document.getElementById('path');
+    if (p) p.textContent = location.pathname;
+  </script>
+</Record>

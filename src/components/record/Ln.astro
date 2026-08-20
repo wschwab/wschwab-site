@@ -1,0 +1,21 @@
+---
+// One numbered line of the record. The rail numeral is a CSS counter (reading
+// coordinate); the anchor is derived from the line's own words (citation address).
+import { lineId } from '../../lib/record';
+
+interface Props {
+  /** Pre-rendered HTML (markdown blocks) instead of the default slot. */
+  html?: string;
+  /** Address override, for callers that already resolved collisions. */
+  id?: string;
+  class?: string;
+}
+const body = Astro.props.html ?? (await Astro.slots.render('default'));
+const aside = Astro.slots.has('aside') ? await Astro.slots.render('aside') : '';
+const id = Astro.props.id ?? lineId(body);
+---
+<div class:list={['ln', Astro.props.class]} id={id}>
+  <a class="ln-n" href={`#${id}`} aria-label="Link to this line"></a>
+  <div class="ln-body"><Fragment set:html={body} /></div>
+  {aside && <div class="ln-aside"><Fragment set:html={aside} /></div>}
+</div>

@@ -10,3 +10,6 @@ agent-docs/
 # It once caught an 844K agent session transcript that was tracked and would
 # have shipped to GitHub + IPFS. Never commit it.
 /~/
+
+# third-party research scrapes; never publish
+.firecrawl/

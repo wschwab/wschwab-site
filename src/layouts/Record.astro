@@ -1,0 +1,89 @@
+---
+import '../styles/record-tokens.css';
+import '../styles/record.css';
+import Head from './Head.astro';
+import Certificate from '../components/record/Certificate.astro';
+import { at, ARCHIVE_V4 } from '../lib/record';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Folio printed on the closing certificate; the landing counts its pages. */
+  folio?: number | string;
+}
+const { title, description, folio } = Astro.props;
+
+// Lives here, as the raw first child of <body>: Astro strips a leading comment
+// from slotted content, and a contract the build erases cannot be audited.
+const CONTRACT = `<!--
+THESIS: A career record with permanent coordinates that ends in a signature, not a footer. Refuses the centred avatar hero over a card grid.
+OWN-WORLD: Pleading paper. Bond #F2F1ED, carbon #191A1C, a double ruled rail of tabular line numerals, a blueback #23395B binding band, red #B3122B only on exhibit stickers and the certificate. Century (TeX Gyre Schola) throughout; Share Tech Mono only for hashes and data.
+STORY: In one viewport the evaluator learns smart contracts and engineering leadership since 2017, follows the index to the exhibits, and leaves through the certificate with a way to reach him. Peers cite any line by its content address.
+FIRST VIEWPORT: Blueback binding band with the running head and binding nav; the name in Schola Bold caps solved to fill the measure; a legal caption with its ) column; a numbered lede; the index with leaders, Exhibits as the primary row. Wide sheets carry the exhibits beside the record.
+FORM: US federal court transcript (Judiciary Policy Vol. 6 §520, SCOTUS R. 33), assigned direction, seed b30e5191.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <Head title={title} description={description} ogImage="/og-record.png" favicon="/favicon-record.svg" noindex />
+</head>
+<body>
+  <Fragment set:html={CONTRACT} />
+  <script is:inline>
+    try { var e = localStorage.getItem('record-edition'); if (e && e !== 'original') document.documentElement.dataset.theme = e; } catch (_) {}
+  </script>
+  <a class="skip" href="#record">Skip to the record</a>
+  <header class="binding">
+    <a class="binding-title" href={at('/')}>In the Record of William&nbsp;Schwab</a>
+    <nav aria-label="Record">
+      <ul>
+        <li><a href={at('/#testimony')}>Testimony</a></li>
+        <li><a href={at('/work/')}>Exhibits</a></li>
+        <li><a href={at('/writing/')}>Writings</a></li>
+        <li><a href={`${at('/')}#certificate`}>Certificate</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="sheet">
+    <main id="record">
+      <slot />
+    </main>
+    <Certificate folio={folio} />
+  </div>
+
+  <form class="editions" aria-labelledby="editions-label" onsubmit="return false">
+    <span class="editions-label" id="editions-label">Edition</span>
+    <label class="tile" data-edition="original" title="Original — bond and carbon">
+      <input type="radio" name="edition" value="original" id="edition-original" checked>
+      <span class="sr">Original</span>
+    </label>
+    <label class="tile" data-edition="blueback" title="Blueback — the cover stock as ground">
+      <input type="radio" name="edition" value="blueback" id="edition-blueback">
+      <span class="sr">Blueback</span>
+    </label>
+    <label class="tile" data-edition="duplicate" title="Duplicate — the canary carbon copy">
+      <input type="radio" name="edition" value="duplicate" id="edition-duplicate">
+      <span class="sr">Duplicate</span>
+    </label>
+    <a class="tile tile-archive" href={ARCHIVE_V4.url} title="v4, 2025–26 — superseded edition, frozen on IPFS">
+      <span aria-hidden="true">v4</span><span class="sr">Superseded v4 edition, frozen on IPFS</span>
+    </a>
+  </form>
+
+  <script>
+    const root = document.documentElement;
+    const radios = document.querySelectorAll<HTMLInputElement>('input[name="edition"]');
+    const current = root.dataset.theme ?? 'original';
+    radios.forEach((r) => {
+      r.checked = r.value === current;
+      r.addEventListener('change', () => {
+        root.dataset.theme = r.value;
+        try { localStorage.setItem('record-edition', r.value); } catch {}
+      });
+    });
+  </script>
+</body>
+</html>

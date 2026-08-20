@@ -1,0 +1,69 @@
+---
+// Every document in the record closes with a named attestation instead of a
+// footer. Contact lives here; so does the one sanctioned *tips hat*.
+import Page from './Page.astro';
+import { EDITION, ARCHIVE_V4 } from '../../lib/record';
+
+interface Props {
+  folio?: number | string;
+}
+const { folio } = Astro.props;
+const closed = EDITION.closed;
+const time = closed.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+const day = closed.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const commit = `https://github.com/wschwab/wschwab-site/commit/${EDITION.sha}`;
+---
+<Page id="certificate" title="Certificate" folio={folio} class="certificate">
+  <p class="insertion threshold">(Whereupon, the record was closed at {time} UTC on {day}.)</p>
+
+  <p class="attest">I, William Schwab, certify that the foregoing is a true record of my
+    work, entered at wschwab.xyz and pinned to IPFS with every publish.</p>
+
+  <div class="signature">
+    <span class="conformed">/s/ William Schwab</span>
+    <span class="signed-as">William Schwab, smart contract developer</span>
+  </div>
+
+  <dl class="correspondence">
+    <dt>Email</dt>
+    <dd><a id="em" href="#certificate" title="Click to copy">w.s.schwab4 [at] gmail [dot] com</a> <span id="em-ok" class="insertion" aria-live="polite"></span></dd>
+    <dt>LinkedIn</dt><dd><a href="https://linkedin.com/in/william-schwab-4">linkedin.com/in/william-schwab-4</a></dd>
+    <dt>GitHub</dt><dd><a href="https://github.com/wschwab" rel="me">github.com/wschwab</a></dd>
+    <dt>X</dt><dd><a href="https://x.com/wschwab_" rel="me">@wschwab_</a></dd>
+    <dt>Substack</dt><dd><a href="https://wschwab.substack.com">wschwab.substack.com</a></dd>
+    <dt>Prepared with</dt><dd>Fable (Claude) <span class="insertion">— *tips hat back*</span></dd>
+  </dl>
+
+  <p class="tips">*tips hat*</p>
+
+  <p class="insertion permanence">(Nothing entered here is revised away. Each publish is pinned to IPFS; later editions add to the
+    record, and the one this supersedes stays at <a href={ARCHIVE_V4.url}>its own address</a>.)</p>
+
+  {EDITION.sha && (
+    <div class="edition">
+      <div class="seal" aria-hidden="true">
+        <span>Certified</span>
+        <b>Record</b>
+        <span>{day}</span>
+      </div>
+      <a class="edition-hash" href={commit} aria-label={`Edition ${EDITION.short}, view the commit`}>{EDITION.short}</a>
+      <p class="insertion">(Edition {EDITION.short}: the commit this record was built from.{EDITION.dirty && ' This preview carries uncommitted changes and is not a published edition.'})</p>
+    </div>
+  )}
+</Page>
+
+<script>
+  // Assembled client-side; no mailto anywhere. Click copies instead.
+  const em = document.getElementById('em');
+  const ok = document.getElementById('em-ok');
+  if (em && ok) {
+    const addr = ['w.s', 'schwab4'].join('.') + String.fromCharCode(64) + ['gmail', 'com'].join('.');
+    em.textContent = addr;
+    em.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await navigator.clipboard.writeText(addr);
+      ok.textContent = '(copied to the clipboard)';
+      setTimeout(() => (ok.textContent = ''), 2400);
+    });
+  }
+</script>

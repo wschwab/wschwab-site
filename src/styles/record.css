@@ -1,0 +1,331 @@
+/* The Certified Record — world stylesheet. Written from scratch; imports nothing
+   from the v4 site. Structure lives here; every colour comes from record-tokens.css. */
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scrollbar-color:var(--rule) var(--paper);scroll-padding-top:2rem}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font:400 var(--fs-body)/var(--lh-body) var(--serif);
+  font-variant-numeric:lining-nums;
+  font-kerning:normal;
+  text-rendering:optimizeLegibility;
+  caret-color:var(--ink);
+}
+::selection{background:var(--blueback);color:var(--on-blueback)}
+h1,h2,h3,p,dl,dd,ol,ul,figure{margin:0}
+ol,ul{padding:0;list-style:none}
+img{max-width:100%;display:block}
+
+a{color:inherit;text-decoration-line:underline;text-decoration-thickness:1px;
+  text-underline-offset:.2em;text-decoration-color:var(--rule);
+  transition:text-decoration-color var(--dur) var(--ease)}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--blueback);outline-offset:3px;border-radius:1px}
+
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:var(--gutter);top:-4rem;z-index:30;background:var(--paper);padding:.4rem .8rem;border:1px solid var(--ink)}
+.skip:focus{top:.75rem}
+
+/* small caps, the transcript's label voice */
+.sc,.binding,.folio,.index-p,.docket th,.sticker span,.seal span,.ln-aside,.editions-label,.speaker,.correspondence dt,.exhibit .ex-tags{
+  font-variant-caps:all-small-caps;font-variant-numeric:lining-nums tabular-nums;letter-spacing:.08em}
+
+/* ── Binding band: the blueback cover folded over the top ─────────────── */
+.binding{
+  background:var(--blueback);color:var(--on-blueback);
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.25rem 2rem;
+  padding:.85rem var(--gutter);font-size:1.0625rem;letter-spacing:.12em}
+.binding a{text-decoration:none}
+.binding a:hover{text-decoration:underline;text-decoration-color:currentColor}
+.binding :focus-visible{outline-color:var(--on-blueback)}
+.binding ul{display:flex;flex-wrap:wrap;gap:.25rem 1.5rem}
+
+/* ── The sheet: pleading paper with a double rule left, single rule right ── */
+.sheet{
+  --cols:var(--rail) minmax(0,var(--measure)) minmax(0,1fr);
+  position:relative;
+  max-width:min(110rem, max(68rem, 78vw));
+  margin:0 auto;
+  padding:0 var(--gutter);
+}
+.sheet::before{ /* the double rule */
+  content:"";position:absolute;top:0;bottom:0;
+  left:calc(var(--gutter) + var(--rail) - 1rem);width:4px;
+  border-left:1px solid var(--rule);border-right:1px solid var(--rule);
+  pointer-events:none}
+.sheet::after{ /* the single rule */
+  content:"";position:absolute;top:0;bottom:0;right:calc(var(--gutter) - .75rem);
+  border-left:1px solid var(--rule);pointer-events:none}
+
+/* ── A page ───────────────────────────────────────────────────────────── */
+.page{counter-reset:line;padding:calc(var(--beat) * 2.5) 0 var(--beat)}
+.page + .page,.page + .spread,.spread-side > .page{border-top:1px solid var(--rule)}
+.page-head{
+  display:grid;grid-template-columns:var(--cols);align-items:baseline;
+  margin-bottom:calc(var(--beat) * 1.25)}
+/* the transcript's section head: spaced full capitals, centred over the measure */
+.page-head h2{
+  grid-column:2;justify-self:center;margin-right:-.42em;
+  font-weight:400;font-size:var(--fs-body);
+  letter-spacing:.42em;text-transform:uppercase;color:var(--ink)}
+.folio{grid-column:3;justify-self:end;color:var(--ink-2);font-size:var(--fs-small);letter-spacing:.12em}
+
+/* ── A numbered line ──────────────────────────────────────────────────── */
+.ln{
+  counter-increment:line;
+  display:grid;grid-template-columns:var(--cols);column-gap:0;
+  scroll-margin-top:3rem;
+  transition:background-color var(--dur) var(--ease)}
+.ln + .ln{margin-top:calc(var(--beat) * .5)}
+.ln-n{
+  grid-column:1;justify-self:end;padding-right:1.6rem;
+  font-size:var(--fs-small);line-height:calc(var(--fs-body) * var(--lh-body));
+  font-variant-numeric:tabular-nums lining-nums;color:var(--ink-2);text-decoration:none}
+.ln-n::before{content:counter(line)}
+.ln-n:hover,.ln:target .ln-n{color:var(--ink);text-decoration:underline}
+.ln-body{grid-column:2;max-width:var(--measure)}
+.ln-body > * + *{margin-top:calc(var(--beat) * .5)}
+.ln-aside{grid-column:3;padding-left:2rem;color:var(--ink-2);font-size:var(--fs-small);
+  line-height:calc(var(--fs-body) * var(--lh-body))}
+.ln:target{background:var(--mark)}
+
+.insertion{color:var(--ink-2)}
+.speaker{font-size:1.0625rem;letter-spacing:.06em;margin-right:.35em}
+.lead{font-size:var(--fs-lead);line-height:1.5}
+strong{font-weight:700}
+
+/* ── Page 1: the caption ──────────────────────────────────────────────── */
+.caption{display:grid;grid-template-columns:var(--cols);padding-top:calc(var(--beat) * 2)}
+.caption > *{grid-column:2 / 4}
+.name-wrap{container-type:inline-size}
+.name{
+  font-weight:700;text-transform:uppercase;letter-spacing:-.01em;line-height:.9;
+  font-size:calc(100cqi / 10.06);white-space:nowrap;
+  padding-bottom:calc(var(--beat) * .75)}
+.name span{display:inline}
+@container (max-width: 36rem){
+  .name{font-size:calc(100cqi / 5.02);line-height:.95}
+  .name span{display:block}
+}
+.caption-grid{
+  display:grid;grid-template-columns:minmax(0,1fr) 2.5rem minmax(0,1.15fr);
+  border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);
+  padding:calc(var(--beat) * .5) 0;margin-bottom:calc(var(--beat) * 1.5)}
+.caption-grid p{line-height:var(--beat)}
+.paren{position:relative;overflow:hidden;color:var(--ink-2);text-align:center}
+.paren span{position:absolute;inset:0 0 auto;white-space:pre;line-height:var(--beat)}
+.matter{padding-left:.5rem}
+
+/* the index: the record's front matter, and its navigation */
+.index{display:grid;grid-template-columns:var(--cols);margin-top:calc(var(--beat) * 1.5)}
+.index > *{grid-column:2}
+.index a{
+  display:flex;align-items:baseline;gap:.6rem;text-decoration:none;
+  font-size:var(--fs-title);line-height:1.2;padding:.45rem 0}
+.index a:hover .index-t{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.2em}
+.index-d{color:var(--ink-2);font-size:var(--fs-small);font-style:italic}
+.index-l{flex:1;border-bottom:1px dotted var(--ink-2);transform:translateY(-.3em);min-width:1rem}
+.index-p{font-size:var(--fs-body);color:var(--ink-2)}
+.index .primary .index-t{font-weight:700}
+
+/* ── Page 3: the docket ───────────────────────────────────────────────── */
+.docket{display:grid;grid-template-columns:var(--cols)}
+.docket table{grid-column:1 / 3;border-collapse:collapse;width:100%}
+.docket th{font-weight:400;color:var(--ink-2);font-size:var(--fs-small);text-align:left;
+  padding:0 0 .5rem;border-bottom:1px solid var(--ink)}
+.docket th:first-child,.docket td:first-child{width:var(--rail);text-align:right;padding-right:1.6rem}
+.docket td{vertical-align:baseline;padding:.65rem 1rem .65rem 0;border-bottom:1px solid var(--rule)}
+.docket td:first-child{font-size:var(--fs-small);color:var(--ink-2);font-variant-numeric:tabular-nums lining-nums}
+.docket .filed{white-space:nowrap;color:var(--ink-2);font-variant-numeric:tabular-nums lining-nums;width:9.5rem}
+.docket b{font-weight:700}
+
+/* ── Page 4: exhibits, shingled on heavier stock ──────────────────────── */
+.exhibits{display:grid;grid-template-columns:var(--cols);padding-top:calc(var(--beat) * .5)}
+.stack{grid-column:2 / 4;max-width:52rem}
+.exhibit{
+  position:relative;
+  background:var(--stock-1);
+  border:1px solid var(--rule);           /* elevation is declared once: a border, never a shadow */
+  padding:calc(var(--beat) * .9) 1.5rem calc(var(--beat) * 1.6) 1.5rem;
+  margin-left:var(--shift,0);
+  transition:border-color var(--dur) var(--ease)}
+.exhibit + .exhibit{margin-top:calc(var(--beat) * -.9)} /* real overlap: each sheet lies on the last */
+.exhibit:nth-child(3n+2){background:var(--stock-2)}
+.exhibit:nth-child(3n){background:var(--stock-3)}
+.exhibit:nth-child(4n+2){--shift:1.25rem}
+.exhibit:nth-child(4n+3){--shift:.5rem}
+.exhibit:nth-child(4n){--shift:1.75rem}
+.exhibit:hover,.exhibit:focus-within{z-index:5;border-color:var(--ink)} /* pulled from the stack */
+.exhibit h3{font-size:var(--fs-title);line-height:1.2;font-weight:700;letter-spacing:-.01em;padding-right:5.5rem}
+.exhibit h3 a{text-decoration:none}
+.exhibit h3 a::after{content:"";position:absolute;inset:0;z-index:1}
+.exhibit h3 a:focus-visible{outline:none}
+.exhibit:has(h3 a:focus-visible){outline:2px solid var(--blueback);outline-offset:3px}
+.ex-meta{color:var(--ink-2);margin-top:.2rem}
+.ex-sum{margin-top:.6rem;max-width:var(--measure)}
+.exhibit .ex-tags{margin-top:.7rem;color:var(--ink-2);font-size:var(--fs-small);letter-spacing:.1em}
+.ex-soft{font-variant-caps:normal;letter-spacing:0;font-style:italic;font-size:var(--fs-small)}
+.ex-cta{display:inline-block;margin-top:.6rem;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:.2em}
+.exhibit:hover .ex-cta{text-decoration-color:currentColor}
+
+/* the exhibit sticker: the only red on the page above the certificate */
+.sticker{
+  position:absolute;top:-.6rem;right:1.25rem;z-index:2;
+  min-width:5.25rem;padding:.3rem .6rem .35rem;text-align:center;
+  background:var(--exhibit);color:var(--on-exhibit);line-height:1}
+.sticker span{display:block;font-size:.75rem;letter-spacing:.2em}
+.sticker b{display:block;font-size:1.875rem;line-height:1;margin-top:.1rem;font-variant-numeric:lining-nums}
+.more{display:grid;grid-template-columns:var(--cols);margin-top:calc(var(--beat) * 1.25)}
+.more > *{grid-column:2}
+main > .more{padding-bottom:calc(var(--beat) * 2.5)}
+
+/* ── Writings ─────────────────────────────────────────────────────────── */
+.writ h3{font-size:var(--fs-title);line-height:1.25;font-weight:700;letter-spacing:-.01em}
+.writ h3 a{text-decoration-color:var(--rule)}
+.writ p{margin-top:.3rem}
+
+/* ── Certificate ──────────────────────────────────────────────────────── */
+.certificate{border-top:3px double var(--ink) !important}
+.certificate > :not(.page-head){margin-left:var(--rail);max-width:var(--measure)}
+.threshold{font-style:italic;margin-bottom:var(--beat)}
+.attest{font-size:var(--fs-lead);line-height:1.5}
+.signature{display:grid;gap:.15rem;margin-top:calc(var(--beat) * 1.25);max-width:22rem}
+.conformed{font-style:italic;font-size:var(--fs-lead);border-bottom:1px solid var(--ink);padding-bottom:.25rem}
+.signed-as{color:var(--ink-2);font-size:var(--fs-small)}
+.correspondence{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1.5rem;margin-top:calc(var(--beat) * 1.5)}
+.correspondence dt{color:var(--ink-2);font-size:var(--fs-small);line-height:calc(var(--fs-body) * var(--lh-body))}
+.correspondence dd{overflow-wrap:anywhere}
+.tips{margin-top:var(--beat);font-style:italic}
+.permanence{margin-top:calc(var(--beat) * .5)}
+
+.edition{position:relative;margin-top:calc(var(--beat) * 2);container-type:inline-size;max-width:none !important}
+.edition-hash{
+  display:block;width:max-content;
+  font-family:var(--mono);font-size:min(calc(100cqi / 3.86), 13rem);line-height:.9;
+  letter-spacing:0;text-decoration:none;color:var(--ink);margin-top:.25rem}
+.edition-hash:hover{text-decoration:underline;text-decoration-thickness:.04em;text-underline-offset:.08em}
+.edition .insertion{margin-top:.75rem;font-style:italic}
+
+/* the seal: red, the attestation's only colour */
+.seal{
+  position:absolute;right:0;top:-1rem;z-index:2;
+  display:grid;justify-items:center;gap:.1rem;
+  padding:.55rem .9rem;border:3px double var(--exhibit);color:var(--exhibit);
+  transform:rotate(-4deg);line-height:1.05;background:var(--paper)}
+.seal span{font-size:.8125rem;letter-spacing:.24em}
+.seal b{font-size:1.625rem;letter-spacing:.02em}
+
+/* ── Edition picker: a narrow strip in the left margin, outside the rail ─ */
+.editions{
+  position:fixed;left:.5rem;bottom:.75rem;z-index:20;
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  padding:.6rem .4rem .5rem;background:var(--paper);border:1px solid var(--rule)}
+.editions-label{font-size:var(--fs-small);color:var(--ink-2);writing-mode:vertical-rl;transform:rotate(180deg);margin-bottom:.2rem}
+.tile{
+  --a:#F2F1ED;--b:#191A1C;
+  position:relative;display:grid;place-items:center;width:1.5rem;height:1.5rem;cursor:pointer;
+  background:linear-gradient(135deg, var(--a) 0 58%, var(--b) 58% 100%);
+  border:1px solid var(--rule);text-decoration:none}
+.tile[data-edition="blueback"]{--a:#16243B;--b:#EDEEEA}
+.tile[data-edition="duplicate"]{--a:#F4E9A9;--b:#262A6B}
+.tile input{position:absolute;inset:0;margin:0;opacity:0;cursor:pointer}
+.tile:has(input:checked){outline:2px solid var(--ink);outline-offset:2px}
+.tile:has(input:focus-visible){outline:2px solid var(--blueback);outline-offset:4px}
+.tile-archive{background:none;color:var(--ink-2);font-size:.75rem;line-height:1;margin-top:.2rem;border-style:dashed}
+.tile-archive:hover{color:var(--ink);border-color:var(--ink)}
+
+/* ── Records (case-study pages, archives) ─────────────────────────────── */
+.record-caption{display:grid;grid-template-columns:var(--cols);padding-top:calc(var(--beat) * 2)}
+.record-caption > *{grid-column:2 / 4}
+.record-caption .exhibit-mark{position:relative}
+.record-caption .sticker{position:static;display:inline-block;margin-bottom:calc(var(--beat) * .75)}
+.record-title{font-size:clamp(2.25rem, 1.2rem + 4.2vw, 5.25rem);font-weight:700;line-height:1;letter-spacing:-.02em;text-wrap:balance}
+.record-caption .caption-grid{margin-top:calc(var(--beat) * .9);margin-bottom:0}
+.prose .ln-body a{text-decoration-color:var(--ink-2)}
+.prose .ln-body ul{list-style:disc;padding-left:1.25rem}
+.prose .ln-body li + li{margin-top:.3rem}
+.prose .ln-body h2,.prose .ln-body h3{font-size:var(--fs-title);line-height:1.25}
+.prose .ln-body code,.prose .ln-body pre{font-family:var(--mono);font-size:.95em}
+
+.ledger{display:grid;grid-template-columns:var(--cols)}
+.ledger > *{grid-column:1 / 4}
+.ledger table{border-collapse:collapse;width:100%}
+.ledger th{font-weight:400;color:var(--ink-2);font-size:var(--fs-small);text-align:left;padding:0 1rem .5rem 0;border-bottom:1px solid var(--ink);
+  font-variant-caps:all-small-caps;letter-spacing:.1em}
+.ledger td{vertical-align:baseline;padding:1rem 1rem 1rem 0;border-bottom:1px solid var(--rule)}
+.ledger th:first-child,.ledger td:first-child{width:var(--rail);text-align:right;padding-right:1.6rem}
+.ledger td:first-child{color:var(--ink-2);font-size:var(--fs-small)}
+.ledger .t a{font-weight:700;font-size:var(--fs-title);line-height:1.2;text-decoration-color:var(--rule);letter-spacing:-.01em}
+.ledger .t p{margin-top:.35rem;max-width:var(--measure)}
+.ledger .d{color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums lining-nums}
+.ledger .d small{display:block;font-size:var(--fs-small)}
+
+.notfound{display:grid;grid-template-columns:var(--cols);padding-block:calc(var(--beat) * 2) calc(var(--beat) * 2.5);container-type:inline-size}
+.notfound > *{grid-column:2 / 4}
+.code404{font-family:var(--mono);font-size:min(calc(68cqi / 1.62), 22rem);line-height:.82;letter-spacing:0}
+.notfound .path{font-family:var(--mono);overflow-wrap:anywhere}
+
+/* ── Motion: spent on structure, withheld from content ────────────────── */
+@media (prefers-reduced-motion: no-preference){
+  @supports (animation-timeline: view()){
+    /* a page boundary crossed: its heading sets from wide-spaced to set type */
+    .page-head h2{animation:set-head linear both;animation-timeline:view();animation-range:entry 10% entry 90%}
+    /* the record closes: the seal is pressed as the certificate arrives */
+    .seal{animation:press linear both;animation-timeline:view();animation-range:entry 30% cover 38%}
+  }
+}
+@keyframes set-head{from{letter-spacing:1.1em}to{letter-spacing:.42em}}
+@keyframes press{
+  from{transform:rotate(-11deg) scale(1.35);opacity:0}
+  70%{transform:rotate(-3deg) scale(.97);opacity:1}
+  to{transform:rotate(-4deg) scale(1);opacity:1}}
+
+/* ── Wide sheets: the exhibits are clipped beside the record ──────────── */
+@media (min-width: 84rem){
+  .sheet{max-width:100rem}
+  .spread{display:grid;grid-template-columns:minmax(0,1fr) minmax(22rem,28rem);column-gap:2.5rem;align-items:start}
+  .spread-side{
+    --cols:0px minmax(0,1fr) max-content;
+    align-self:stretch;border-left:1px solid var(--rule);padding-left:2.5rem}
+  .spread-side > .page{border-top:0}
+  .spread-side .stack{max-width:none}
+  .spread-side .exhibit:nth-child(n){--shift:0px}
+  .spread-side .exhibit:nth-child(even){--shift:.75rem}
+}
+
+/* ── Narrow sheets ────────────────────────────────────────────────────── */
+@media (max-width: 56rem){
+  .sheet{--cols:var(--rail) minmax(0,1fr) 0}
+  .ln-aside{grid-column:2;padding-left:0;margin-top:.15rem}
+  .folio{grid-column:2;justify-self:center;margin-top:.25rem}
+  .page-head{grid-template-columns:var(--rail) minmax(0,1fr)}
+  .stack{grid-column:2 / 3}
+  .ledger .d{white-space:normal}
+}
+@media (max-width: 40rem){
+  :root{--rail:2.25rem;--fs-body:1.0625rem;--fs-lead:1.1875rem;--fs-title:1.3125rem;--beat:1.625rem}
+  .ln-n,.docket td:first-child,.docket th:first-child,.ledger td:first-child,.ledger th:first-child{padding-right:1.05rem}
+  .sheet::before{left:calc(var(--gutter) + var(--rail) - .65rem)}
+  .binding{font-size:.875rem;letter-spacing:.06em;padding-block:.7rem}
+  .binding ul{gap:.15rem 1rem}
+  .caption-grid{grid-template-columns:minmax(0,1fr) 1rem minmax(0,1fr);font-size:.9375rem}
+  .caption-grid br{display:none}
+  .exhibit{padding:calc(var(--beat) * 1.6) 1rem calc(var(--beat) * 1.4) 1rem;--shift:0 !important}
+  .exhibit h3{padding-right:0}
+  .exhibit + .exhibit{margin-top:calc(var(--beat) * -.6)}
+  .sticker{min-width:4.25rem}
+  .sticker b{font-size:1.5rem}
+  .docket .filed{width:auto;white-space:normal}
+  .ledger thead{display:none}
+  .ledger tr{display:grid;grid-template-columns:var(--rail) minmax(0,1fr)}
+  .ledger td{border-bottom:0;padding-bottom:.2rem}
+  .ledger td.d{grid-column:2;padding-top:0;padding-bottom:1rem;border-bottom:1px solid var(--rule)}
+  .ledger td:first-child{grid-row:span 2}
+  .seal{position:static;width:max-content;margin-bottom:var(--beat)}
+  /* on a phone the picker would sit over the text, so it files at the end of the record */
+  .editions{position:static;width:max-content;margin:0 auto var(--beat);flex-direction:row;padding:.4rem .5rem .4rem .7rem}
+  .editions-label{writing-mode:horizontal-tb;transform:none;margin:0 .2rem 0 0}
+  .tile-archive{margin:0 0 0 .3rem}
+}
