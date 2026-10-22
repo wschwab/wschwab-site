@@ -236,6 +236,18 @@ main > .more{padding-bottom:calc(var(--beat) * 2.5)}
 .tile-archive{background:none;color:var(--ink-2);font-size:.75rem;line-height:1;margin-top:.2rem;border-style:dashed}
 .tile-archive:hover{color:var(--ink);border-color:var(--ink)}
 
+/* stock finish: under a hairline in the same strip; the button has a fixed length so
+   stepping through finishes never moves the strip. Hidden without script (the default stands). */
+.stock-group{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding-top:.6rem;border-top:1px solid var(--rule)}
+:root:not([data-paper]) .stock-group{display:none}
+.stock{
+  writing-mode:vertical-rl;transform:rotate(180deg);inline-size:4.5rem;block-size:1.5rem;
+  display:grid;place-items:center;padding:0;cursor:pointer;
+  font:inherit;font-size:var(--fs-small);color:var(--ink);font-variant-caps:all-small-caps;letter-spacing:.08em;
+  background:none;border:1px solid var(--rule)}
+.stock:hover{border-color:var(--ink)}
+.stock:focus-visible{outline:2px solid var(--blueback);outline-offset:4px}
+
 /* ── Records (case-study pages, archives) ─────────────────────────────── */
 .record-caption{display:grid;grid-template-columns:var(--cols);padding-top:calc(var(--beat) * 2)}
 .record-caption > *{grid-column:2 / 4}
@@ -328,4 +340,6 @@ main > .more{padding-bottom:calc(var(--beat) * 2.5)}
   .editions{position:static;width:max-content;margin:0 auto var(--beat);flex-direction:row;padding:.4rem .5rem .4rem .7rem}
   .editions-label{writing-mode:horizontal-tb;transform:none;margin:0 .2rem 0 0}
   .tile-archive{margin:0 0 0 .3rem}
+  .stock-group{flex-direction:row;padding:0 0 0 .6rem;margin-left:.3rem;border-top:0;border-left:1px solid var(--rule)}
+  .stock{writing-mode:horizontal-tb;transform:none}
 }

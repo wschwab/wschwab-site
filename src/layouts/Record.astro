@@ -1,6 +1,7 @@
 ---
 import '../styles/record-tokens.css';
 import '../styles/record.css';
+import '../styles/record-paper.css';
 import Head from './Head.astro';
 import Certificate from '../components/record/Certificate.astro';
 import { at, ARCHIVE_V4 } from '../lib/record';
@@ -33,6 +34,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <Fragment set:html={CONTRACT} />
   <script is:inline>
     try { var e = localStorage.getItem('record-edition'); if (e && e !== 'original') document.documentElement.dataset.theme = e; } catch (_) {}
+    try { var p = localStorage.getItem('record-paper'); document.documentElement.dataset.paper = ['plain', 'smooth', 'fibre', 'rough'].indexOf(p) < 0 ? 'fine' : p; } catch (_) { document.documentElement.dataset.paper = 'fine'; }
   </script>
   <a class="skip" href="#record">Skip to the record</a>
   <header class="binding">
@@ -71,6 +73,13 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <a class="tile tile-archive" href={ARCHIVE_V4.url} title="v4, 2025–26 — superseded edition, frozen on IPFS">
       <span aria-hidden="true">v4</span><span class="sr">Superseded v4 edition, frozen on IPFS</span>
     </a>
+    <span class="stock-group">
+      <span class="editions-label" aria-hidden="true">Stock</span>
+      <button type="button" class="stock" id="stock" aria-labelledby="stock-label-sr stock-name" title="Paper stock — change the finish">
+        <span class="sr" id="stock-label-sr">Paper stock:</span>
+        <span id="stock-name" aria-live="polite">fine</span>
+      </button>
+    </span>
   </form>
 
   <script>
@@ -83,6 +92,18 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         root.dataset.theme = r.value;
         try { localStorage.setItem('record-edition', r.value); } catch {}
       });
+    });
+
+    // stock finish (record-paper.css): the button steps lightest → heaviest and wraps
+    const stock = document.getElementById('stock')!;
+    const stockName = document.getElementById('stock-name')!;
+    const finishes = ['plain', 'smooth', 'fine', 'fibre', 'rough'];
+    stockName.textContent = root.dataset.paper ?? 'fine';
+    stock.addEventListener('click', () => {
+      const next = finishes[(finishes.indexOf(root.dataset.paper ?? 'fine') + 1) % finishes.length];
+      root.dataset.paper = next;
+      stockName.textContent = next;
+      try { localStorage.setItem('record-paper', next); } catch {}
     });
   </script>
 </body>

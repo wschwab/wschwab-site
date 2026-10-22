@@ -1,0 +1,38 @@
+/* Stock finish: a generated paper tile blended into each edition's stock colour, so every
+   edition keeps its own paper and text never sits under an overlay. Light stock multiplies
+   the light tile (fibres darken); dark stock screens the dark tile (fibres lift).
+   Finishes, lightest to heaviest: plain · smooth · fine (default) · fibre · rough.
+   The default needs no script: an absent or unknown data-paper is fine.
+   Tiles: 640px, seamless, monochrome AVIF (public/paper/); generators in agent-docs/paper/. */
+
+:root{
+  --t-light:url('/paper/fine.avif'); --t-dark:url('/paper/fine-dark.avif');
+  --tex:var(--t-light);     --tex-mode:multiply;
+  --band-tex:var(--t-dark); --band-mode:screen;
+}
+:root[data-paper="smooth"]{--t-light:url('/paper/smooth.avif'); --t-dark:url('/paper/smooth-dark.avif')}
+:root[data-paper="fibre"]{--t-light:url('/paper/fibre.avif');  --t-dark:url('/paper/fibre-dark.avif')}
+:root[data-paper="rough"]{--t-light:url('/paper/rough.avif');  --t-dark:url('/paper/rough-dark.avif')}
+
+/* Blueback is dark stock and its band is light: the pair swaps */
+:root[data-theme="blueback"],
+:root:not([data-theme]):has(#edition-blueback:checked){
+  --tex:var(--t-dark);       --tex-mode:screen;
+  --band-tex:var(--t-light); --band-mode:multiply;
+}
+
+/* the sheet */
+:root:not([data-paper="plain"]) body,
+:root:not([data-paper="plain"]) .skip,
+:root:not([data-paper="plain"]) .seal,
+:root:not([data-paper="plain"]) .editions{
+  background-image:var(--tex);background-blend-mode:var(--tex-mode);background-size:640px}
+
+/* exhibits are heavier stock: a coarser, offset run of the same furnish */
+:root:not([data-paper="plain"]) .exhibit{
+  background-image:var(--tex);background-blend-mode:var(--tex-mode);
+  background-size:880px;background-position:37% 61%}
+
+/* the blueback cover */
+:root:not([data-paper="plain"]) .binding{
+  background-image:var(--band-tex);background-blend-mode:var(--band-mode);background-size:640px}
