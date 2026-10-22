@@ -1,11 +1,6 @@
 import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';
 
-/** Mount point of the record while it is staged. The flip (plan Phase F) sets
- *  this to '' and moves src/pages/next/** to the root; nothing else changes. */
-export const ROOT = '/next';
-export const at = (path: string) => `${ROOT}${path}`;
-
 /** The superseded v4 design, frozen at the CID its last publish pinned
  *  (IPNS key `wschwab-site`). Subdomain gateway so its root-relative paths resolve. */
 export const ARCHIVE_V4 = {

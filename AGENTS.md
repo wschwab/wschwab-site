@@ -19,7 +19,7 @@ change as shipping to production (and IPFS) permanently.
 - **Node 22** in CI; package manager is **npm** (`npm ci` in CI).
 - **TypeScript**; strictness is managed by Astro's generated `.astro/*.d.ts`
   (no `tsconfig.json` is checked in — don't create one).
-- **Vanilla CSS** only, via custom properties in `src/styles/tokens.css`.
+- **Vanilla CSS** only, via custom properties in `src/styles/record-tokens.css`.
   No Tailwind or CSS framework.
 - **Content:** Astro content collections with zod schemas in
   `src/content.config.ts`. Adding a project/essay = adding one markdown file.
@@ -74,21 +74,20 @@ Frontmatter is validated by zod in `src/content.config.ts`.
 
 - **`src/content/work/*.md`** — case studies. Required: `title`, `role`,
   `period`, `tags` (array), `summary`. Optional: `featured` (int 1–6, landing
-  slot order — exactly 3 shown on landing), `cta`, `external` (card links out
+  exhibit order — up to 6 shown on landing), `cta`, `external` (card links out
   instead of `/work/<slug>/`), `links[]`, `soft_tags`, `draft`.
-- **`src/content/writing/*.md`** — essays. Required: `title`, `kind` (eyebrow
+- **`src/content/writing/*.md`** — essays. Required: `title`, `kind` (genre
   label), `summary`. `venue` is an enum `['Medium','Mirror','Paragraph',
   'Substack','local']`; `url` required unless `venue: local`. Optional: `date`,
   `featured` (int 1–3), `archive_section` (`main`|`older`), `draft`.
-- **Landing slots:** `index.astro` pulls `featured` work (3 slots) and `featured`
-  writing (3 slots). Product constraint: exactly 3 writing / 6 work featured
-  slots exist; don't invent new slot counts.
+- **Landing slots:** `index.astro` shows up to 6 `featured` work items as
+  exhibits, and 3 writings: the live Substack card plus `featured` 2 and 3.
+  Don't invent new slot counts.
 
 ### Pages (`src/pages/`)
 
-- `index.astro` — landing (hero, about, featured work/writing, live Substack
-  card, canvas sky). Inline `script`s assemble the email client-side and draw
-  the sky canvas.
+- `index.astro` — landing ("the Certified Record": binding, caption, testimony,
+  docket, exhibits, writings incl. the live Substack card, certificate).
 - `work/index.astro` + `work/[slug].astro` — case-study list + pages via
   `getStaticPaths` over non-draft work.
 - `writing/index.astro` — archive (main + "Older & assorted" sections). Cards
@@ -99,8 +98,8 @@ Frontmatter is validated by zod in `src/content.config.ts`.
 ### Key conventions
 
 - **Every layout's `<head>` comes from `src/layouts/Head.astro`**
-  (`src/layouts/Base.astro` wraps it). Do **not** duplicate meta tags into a new
-  layout (DESIGN.md).
+  (`src/layouts/Record.astro` and `Deck.astro` wrap it). Do **not** duplicate
+  meta tags into a new layout (DESIGN.md).
 - **`src/data/rice-progress.json` is the single source of truth** for all `/rice/`
   status claims. It currently carries `_seed: true` — phase states and generation
   numbers are **hand-seeded ESTIMATES**, not host truth. Don't drop `_seed` or
@@ -114,30 +113,35 @@ Frontmatter is validated by zod in `src/content.config.ts`.
 - **Not a renderer for `venue: local`:** the schema permits `venue: 'local'`,
   but no `writing/[slug].astro` exists, so a local essay would render a card
   linking to a 404. Add the renderer before adding local essays.
-- **Style (DESIGN.md):** mono-eyebrow + serif-title + hairline grammar, prose
-  ≤68ch, fonts self-hosted in `public/fonts/` (Instrument Serif, JetBrains Mono;
-  plus Redaction/iA/3270/Fira for the rice deck).
+- **Style (DESIGN.md):** pleading-paper record — ruled line-number rail,
+  Century (TeX Gyre Schola) throughout, Share Tech Mono only for hashes/data,
+  editions + stock-finish picker in the margin strip. Fonts self-hosted in
+  `public/fonts/` (plus Redaction/iA/3270/Fira for the rice deck). The v4
+  "night sky" site is frozen on IPFS (`ARCHIVE_V4` in `src/lib/record.ts`).
 - **Product copy constraints (PRD.md/PRODUCT.md) are hard rules, not
   suggestions:** no "AI researcher" framing; JAT/CCCC projects must not be
   showcased or credited; blockchain-first hero.
 
 ## Layout
 
-- Root docs: `PRD.md`, `DEPLOY.md`, `DESIGN.md` (committed); `PRODUCT.md` and
-  `RICE-DECK-BRIEF.md` are **deliberately gitignored / private** (see
-  gitignore) — do not commit them.
-- `design/` — `mockup-v4.html` (visual source of truth), `og-source.html`,
-  fonts, `assets-b64.json`; committed.
-- `public/` — `fonts/`, `og.png`, `robots.txt`, `favicon.svg`, `pfp.jpg`.
-- `src/` — `components/`, `styles/` (`tokens.css`), `layouts/` (`Base.astro`,
-  `Head.astro`, `Deck.astro` used only by `/rice/`), `pages/`, `data/`, `lib/`,
-  `content/`.
+- Docs: `agent-docs/` (`PRD.md`, `DEPLOY.md`, `DESIGN.md`, `DESIGN-v4.md`,
+  `REDESIGN-PLAN.md`, `PRODUCT.md`, `RICE-DECK-BRIEF.md`, paper-texture
+  generators) is **gitignored / private** — do not commit it.
+- `design/` — `og-source.html` (source of `public/og.png`), `mockup-v4.html`
+  (v4 history, no longer the visual reference), fonts, `assets-b64.json`;
+  committed.
+- `public/` — `fonts/`, `paper/` (stock-finish AVIF tiles), `og.png`,
+  `favicon.svg`, `robots.txt`, `_redirects` (`/next/*` → `/`, where the record
+  was staged), `pfp.jpg`.
+- `src/` — `components/record/`, `styles/` (`record-tokens.css`, `record.css`,
+  `record-paper.css`; deck styles), `layouts/` (`Record.astro`, `Head.astro`,
+  `Deck.astro` used only by `/rice/`), `pages/`, `data/`, `lib/`, `content/`.
 - Gitignored: `node_modules/`, `dist/`, `.astro/`, `.wrangler/`, `.claude/`,
-  `.impeccable/`, plus `PRODUCT.md` and `RICE-DECK-BRIEF.md`.
+  `.impeccable/`, `agent-docs/`.
 
 ## Getting up to speed
 
-Read `PRD.md` (product + content model) then `DESIGN.md` (visual system) for a
-complete picture. `DEPLOY.md` contains a stale git-scaffold-from-scratch section
+Read `agent-docs/PRD.md` (product + content model) then `agent-docs/DESIGN.md`
+(visual system) for a complete picture. `DEPLOY.md` contains a stale git-scaffold-from-scratch section
 that predates this repo's jj migration — ignore its history commands and use
 `./commit`, not the workflow it describes.

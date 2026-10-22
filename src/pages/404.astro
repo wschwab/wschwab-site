@@ -1,19 +1,15 @@
 ---
-import Base from '../layouts/Base.astro';
+import Record from '../layouts/Record.astro';
 ---
-<Base title="404">
-  <main>
-    <div class="page">
-      <div class="terminal">
-        <div class="bar"><i></i><i></i><i></i></div>
-        <div class="line"><span class="ps">ws@ethereum:~$</span> cat <span id="path"></span></div>
-        <div class="line">&nbsp;&nbsp;cat: no such file or directory</div>
-        <div class="line"><span class="ps">ws@ethereum:~$</span> cd <a href="/">~</a></div>
-        <div class="line"><span class="ps">ws@ethereum:~$</span> <span class="cursor"></span></div>
-      </div>
-    </div>
-  </main>
+<Record title="Not in the record">
+  <div class="notfound">
+    <p class="code404" aria-hidden="true">404</p>
+    <h1 class="record-title">Not in the record.</h1>
+    <p class="insertion" style="margin-top:1rem">(Whereupon, the page requested at <span class="path" id="path">this address</span> could not be located in this edition of the record.)</p>
+    <p style="margin-top:1.5rem"><a href="/">Return to the front of the record</a> · <a href="/work/">Index of exhibits</a></p>
+  </div>
   <script>
-    document.getElementById('path')!.textContent = location.pathname;
+    const p = document.getElementById('path');
+    if (p) p.textContent = location.pathname;
   </script>
-</Base>
+</Record>

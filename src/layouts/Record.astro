@@ -4,7 +4,7 @@ import '../styles/record.css';
 import '../styles/record-paper.css';
 import Head from './Head.astro';
 import Certificate from '../components/record/Certificate.astro';
-import { at, ARCHIVE_V4 } from '../lib/record';
+import { ARCHIVE_V4 } from '../lib/record';
 
 interface Props {
   title?: string;
@@ -22,13 +22,13 @@ OWN-WORLD: Pleading paper. Bond #F2F1ED, carbon #191A1C, a double ruled rail of 
 STORY: In one viewport the evaluator learns smart contracts and engineering leadership since 2017, follows the index to the exhibits, and leaves through the certificate with a way to reach him. Peers cite any line by its content address.
 FIRST VIEWPORT: Blueback binding band with the running head and binding nav; the name in Schola Bold caps solved to fill the measure; a legal caption with its ) column; a numbered lede; the index with leaders, Exhibits as the primary row. Wide sheets carry the exhibits beside the record.
 FORM: US federal court transcript (Judiciary Policy Vol. 6 §520, SCOTUS R. 33), assigned direction, seed b30e5191.
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+FINISH: discharged 2026-10-22 at the flip — finish review verdict "ship" over two rounds, DESIGN.md written from the built world, og.png carries its provenance, the paper finish tiles are procedural (generators kept with the design record).
 -->`;
 ---
 <!doctype html>
 <html lang="en">
 <head>
-  <Head title={title} description={description} ogImage="/og-record.png" favicon="/favicon-record.svg" noindex />
+  <Head title={title} description={description} />
 </head>
 <body>
   <Fragment set:html={CONTRACT} />
@@ -38,13 +38,13 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   </script>
   <a class="skip" href="#record">Skip to the record</a>
   <header class="binding">
-    <a class="binding-title" href={at('/')}>In the Record of William&nbsp;Schwab</a>
+    <a class="binding-title" href="/">In the Record of William&nbsp;Schwab</a>
     <nav aria-label="Record">
       <ul>
-        <li><a href={at('/#testimony')}>Testimony</a></li>
-        <li><a href={at('/work/')}>Exhibits</a></li>
-        <li><a href={at('/writing/')}>Writings</a></li>
-        <li><a href={`${at('/')}#certificate`}>Certificate</a></li>
+        <li><a href="/#testimony">Testimony</a></li>
+        <li><a href="/work/">Exhibits</a></li>
+        <li><a href="/writing/">Writings</a></li>
+        <li><a href="/#certificate">Certificate</a></li>
       </ul>
     </nav>
   </header>

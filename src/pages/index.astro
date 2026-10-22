@@ -1,215 +1,155 @@
 ---
 import { getCollection } from 'astro:content';
-import Base from '../layouts/Base.astro';
+import Record from '../layouts/Record.astro';
+import Page from '../components/record/Page.astro';
+import Ln from '../components/record/Ln.astro';
 import { latestSubstackPost } from '../lib/substack';
+import { exhibitOrder, PARENS } from '../lib/record';
 
-const work = (await getCollection('work', (e) => !e.data.draft && e.data.featured))
-  .sort((a, b) => a.data.featured! - b.data.featured!);
+const allWork = exhibitOrder(await getCollection('work', (e) => !e.data.draft));
+const exhibitNo = new Map(allWork.map((e, i) => [e.id, i + 1]));
+const featured = allWork.filter((e) => e.data.featured).slice(0, 6);
 const writing = (await getCollection('writing', (e) => !e.data.draft && e.data.featured))
-  .sort((a, b) => a.data.featured! - b.data.featured!);
+  .sort((a, b) => a.data.featured! - b.data.featured!)
+  .filter((e) => e.data.featured !== 1);
 const substack = await latestSubstackPost();
----
-<Base>
-  <canvas id="sky"></canvas>
-  <div class="grain"></div>
 
-  <main id="top">
-    <div class="hero">
-      <div class="pfp-ring rise d1"><img src="/pfp.jpg" alt="William Schwab" width="148" height="148"></div>
-      <div class="eyebrow rise d2">Ethereum &nbsp;·&nbsp; Smart Contracts &nbsp;·&nbsp; Since 2017</div>
-      <h1 class="rise d3">William <em>Schwab</em></h1>
-      <p class="lede rise d4">I build <strong>smart contracts</strong> — and the <strong>teams that ship them</strong>.
-        Nine years across the Ethereum ecosystem: protocol engineering, governance, coordination.
-        These days I'm independent — <strong>consulting, advising, building</strong> —
-        rooted in the EVM, and curious well beyond it.</p>
-      <div class="cta-row rise d5">
-        <a class="btn" href="#work">view selected work →</a>
-        <a class="btn ghost" href="#writing">read the writing</a>
+const docket = [
+  { filed: 'now →', entry: 'Independent', text: 'Consulting, advising, and writing — smart contracts first, but the door is open. Essays at wschwab.substack.com.' },
+  { filed: '2026', entry: 'ViFi', text: 'Smart contracts lead — pre-launch roadmap, production readiness, founder-facing guidance.' },
+  { filed: '2024 – 2025', entry: 'Alchemix', text: 'Engineering manager — v3: core, strategies, governance, and a gauntlet of audits.' },
+  { filed: '2022 – 2023', entry: 'Polygon Labs', text: "Smart contract team lead / engineering manager — built and ran the team serving (almost) all of Polygon's smart contract needs." },
+  { filed: '2020 – 2022', entry: 'Linum Labs', text: 'Web3 engineer, promoted to Solidity team lead — client work across the EVM stack.' },
+  { filed: '2019 – 2023', entry: 'Ethereum Cat Herders', text: 'Wrangler, then Catblazer — EIP process, official note-taker for All Core Devs, podcast host, multisig signer.' },
+  { filed: '2018', entry: 'Materials.Zone', text: 'Junior Blockchain engineer — decentralized data marketplace, governance research, mechanism design.' },
+  { filed: '2017', entry: 'Down the Rabbit Hole', text: 'ML coursework and an economics degree collide with Ethereum.' },
+];
+const href = (e: (typeof allWork)[number]) => e.data.internal ?? e.data.external ?? `/work/${e.id}/`;
+---
+<Record folio={6}>
+  <section class="page page-caption" id="caption" aria-label="Caption">
+    <div class="caption">
+      <div class="name-wrap"><h1 class="name"><span>William</span> <span>Schwab</span></h1></div>
+      <div class="caption-grid">
+        <p class="party">Smart contract developer<br> and engineering leader,<br> independent.</p>
+        <div class="paren" aria-hidden="true"><span>{PARENS}</span></div>
+        <p class="matter">Ethereum, 2017 – present.<br> Protocol engineering, governance,<br> coordination, security.</p>
       </div>
-      <div class="scroll-hint">▼ scroll</div>
     </div>
 
-    <section id="about">
-      <div class="sec-head reveal"><span class="eyebrow">About</span></div>
-      <div class="about-grid">
-        <div class="reveal">
-          <h2 class="title">Technology should serve <em>everyone it touches.</em></h2>
-          <p>What pulled me into blockchain in 2017 is the same thing pulling me now:
-            the conviction that powerful technology should deliver <strong>maximal positive
-            impact</strong>.</p>
-          <p>I've spent those years writing Solidity and shipping protocols — and building the
-            <strong>teams</strong> that do: leading the Solidity team at Linum Labs, then Polygon's
-            smart contracts team as <strong>engineering manager</strong>, then shepherding Alchemix through development and audits. Today I
-            <strong>freelance, consult, and advise</strong>. Alongside all of it, four-plus years with the
-            <strong>Ethereum Cat Herders</strong> — governance, the EIP process, coordinating official note-taking
-            for All Core Devs. <span class="aside">(Also: EthernautDAO alum, former Cat Herders multisig
-            signer, and an anon StackExchange account with 2,500+ rep that I'll never link here.)</span></p>
-          <p>I still think decentralization is wildly under-explored and under-rated — <em>permissionless applications,
-            decentralized storage, social media nobody owns.</em> And I'm circling back to an old
-            interest: my ML coursework predates the smart contracts — 2017, before Ethereum pulled me
-            in. I'm not claiming a research career. <em>Yet.</em> For now, I'll be posting my thoughts and progress on Substack.</p>
-        </div>
-        <div class="timeline reveal">
-          <div class="tl-item cool">
-            <div class="tl-year">now →</div>
-            <h3>Independent</h3>
-            <p>Consulting, advising, and writing — smart contracts first, but the door is open. Essays at wschwab.substack.com.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-year">2026</div>
-            <h3>ViFi</h3>
-            <p>Smart contracts lead — pre-launch roadmap, production readiness, founder-facing guidance.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-year">2024 – 2025</div>
-            <h3>Alchemix</h3>
-            <p>Engineering manager — v3: core, strategies, governance, and a gauntlet of audits.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-year">2022 – 2023</div>
-            <h3>Polygon Labs</h3>
-            <p>Smart contract team lead / engineering manager — built and ran the team serving (almost) all of Polygon's smart contract needs.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-year">2020 – 2022</div>
-            <h3>Linum Labs</h3>
-            <p>Web3 engineer, promoted to Solidity team lead — client work across the EVM stack.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-year">2019 – 2023</div>
-            <h3>Ethereum Cat Herders</h3>
-            <p>Wrangler, then Catblazer — EIP process, official note-taker for All Core Devs, podcast host, multisig signer.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-year">2018</div>
-            <h3>Materials.Zone</h3>
-            <p>Junior Blockchain engineer — decentralized data marketplace, governance research, mechanism design.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-year">2017</div>
-            <h3>Down the Rabbit Hole</h3>
-            <p>ML coursework and an economics degree collide with Ethereum.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <Ln class="lead">
+      <p><strong>I build smart contracts — and the teams that ship them.</strong>
+        Nine years across the Ethereum ecosystem: protocol engineering, governance, coordination.
+        These days I'm independent — consulting, advising, building — rooted in the EVM, and curious well beyond it.</p>
+    </Ln>
 
-    <section id="work">
-      <div class="sec-head reveal"><span class="eyebrow">Selected Work</span></div>
-      <div class="cards">
-        {work.map((item) => (
-          <a class="card reveal" href={item.data.internal ?? item.data.external ?? `/work/${item.id}/`}>
-            <div class="tags">
-              {item.data.tags.map((t) => <span>{t}</span>)}
-              {item.data.soft_tags.map((t) => <span class="warn">{t}</span>)}
-            </div>
-            <h3>{item.data.title}</h3>
-            <p>{item.data.summary}</p>
-            <div class="go">{item.data.cta}</div>
-          </a>
+    <nav class="index" aria-label="Index">
+      <ol>
+        <li class="primary"><a href="#exhibits"><span class="index-t">Exhibits</span><span class="index-d">six selected works</span><span class="index-l"></span><span class="index-p">Page 4</span></a></li>
+        <li><a href="#testimony"><span class="index-t">Testimony</span><span class="index-d">who, and why</span><span class="index-l"></span><span class="index-p">Page 2</span></a></li>
+        <li><a href="#docket"><span class="index-t">Docket</span><span class="index-d">2017 to now</span><span class="index-l"></span><span class="index-p">Page 3</span></a></li>
+        <li><a href="#writings"><span class="index-t">Writings</span><span class="index-d">essays, occasionally</span><span class="index-l"></span><span class="index-p">Page 5</span></a></li>
+        <li><a href="#certificate"><span class="index-t">Certificate</span><span class="index-d">contact</span><span class="index-l"></span><span class="index-p">Page 6</span></a></li>
+      </ol>
+    </nav>
+  </section>
+
+  <div class="spread">
+  <div class="spread-main">
+  <Page id="testimony" title="Testimony" folio={2}>
+    <Ln>
+      <p class="lead"><strong>Technology should serve <em>everyone it touches.</em></strong></p>
+    </Ln>
+    <Ln>
+      <p><span class="speaker">Mr. Schwab:</span> What pulled me into blockchain in 2017 is the same thing pulling me now:
+        the conviction that powerful technology should deliver <strong>maximal positive impact</strong>.</p>
+    </Ln>
+    <Ln>
+      <p>I've spent those years writing Solidity and shipping protocols — and building the
+        <strong>teams</strong> that do: leading the Solidity team at Linum Labs, then Polygon's
+        smart contracts team as <strong>engineering manager</strong>, then shepherding Alchemix through development and audits. Today I
+        <strong>freelance, consult, and advise</strong>. Alongside all of it, four-plus years with the
+        <strong>Ethereum Cat Herders</strong> — governance, the EIP process, coordinating official note-taking
+        for All Core Devs.</p>
+    </Ln>
+    <Ln>
+      <p class="insertion">(Also: EthernautDAO alum, former Cat Herders multisig
+        signer, and an anon StackExchange account with 2,500+ rep that I'll never link here.)</p>
+    </Ln>
+    <Ln>
+      <p>I still think decentralization is wildly under-explored and under-rated — <em>permissionless applications,
+        decentralized storage, social media nobody owns.</em> And I'm circling back to an old
+        interest: my ML coursework predates the smart contracts — 2017, before Ethereum pulled me
+        in. I'm not claiming a research career. <em>Yet.</em> For now, I'll be posting my thoughts and progress on Substack.</p>
+    </Ln>
+  </Page>
+
+  <Page id="docket" title="Docket" folio={3}>
+    <div class="docket">
+      <table>
+        <caption class="sr">Career docket, newest entry first</caption>
+        <thead><tr><th scope="col">No.</th><th scope="col">Filed</th><th scope="col">Entry</th></tr></thead>
+        <tbody>
+          {docket.map((d, i) => (
+            <tr>
+              <td>{docket.length - i}</td>
+              <td class="filed">{d.filed}</td>
+              <td><b>{d.entry}.</b> {d.text}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </Page>
+  </div>
+
+  <div class="spread-side">
+  <Page id="exhibits" title="Exhibits" folio={4}>
+    <div class="exhibits">
+      <div class="stack">
+        {featured.map((item) => (
+          <article class="exhibit">
+            <div class="sticker" aria-hidden="true"><span>Exhibit</span><b>{exhibitNo.get(item.id)}</b></div>
+            <h3><a href={href(item)}><span class="sr">Exhibit {exhibitNo.get(item.id)}: </span>{item.data.title}</a></h3>
+            <p class="ex-meta">{item.data.role} · {item.data.period}</p>
+            <p class="ex-sum">{item.data.summary}</p>
+            <p class="ex-tags">
+              {item.data.tags.join(' · ')}
+              {item.data.soft_tags.length > 0 && <span class="ex-soft"> ({item.data.soft_tags.join(', ')})</span>}
+            </p>
+            <span class="ex-cta" aria-hidden="true">{item.data.cta}</span>
+          </article>
         ))}
       </div>
-      <div class="more reveal"><a class="btn ghost" href="/work/">see all work →</a></div>
-      <p class="work-note reveal">// each card opens a full case-study page — <b>projects are markdown files</b>: add one, push, it appears.</p>
-    </section>
+    </div>
+    <div class="more">
+      <p><a href="/work/">The full index of exhibits</a>
+        <span class="insertion">(Each exhibit is one markdown file; add one, push, and it is entered into the record.)</span></p>
+    </div>
+  </Page>
+  </div>
+  </div>
 
-    <section id="writing">
-      <div class="sec-head reveal"><span class="eyebrow">Writing</span></div>
-      <h2 class="title reveal">Essays, <em>occasionally.</em></h2>
-      <p class="writing-lede reveal">On decentralization, ethics, and <em>building things that deserve to exist</em> —
-        on Substack and Mirror.</p>
-      <div class="essays">
-        <a class="essay reveal" href={substack.url}>
-          <div class="kind">Substack · New</div>
-          <h3>{substack.title}</h3>
-          <p>{substack.summary}</p>
-          {substack.date && <span class="date">{substack.date}</span>}
-        </a>
-        {writing.filter((e) => e.data.featured !== 1).map((e) => (
-          <a class="essay reveal" href={e.data.url}>
-            <div class="kind">{e.data.kind}</div>
-            <h3>{e.data.title}</h3>
-            <p>{e.data.summary}</p>
-          </a>
-        ))}
-      </div>
-      <div class="more reveal"><a class="btn ghost" href="/writing/">read the full archive →</a></div>
-      <p class="work-note reveal">// also on air: <b><a href="https://www.youtube.com/watch?v=58eKnYR_EyM">Solidity Fridays</a></b> livestreams with transmissions11 · the <b><a href="https://open.spotify.com/episode/2baQnYpheB8ol9Kk9fMUCl">Cat Herders podcast</a></b> — the samczsun episode</p>
-    </section>
-
-    <section id="contact">
-      <div class="sec-head reveal"><span class="eyebrow">Contact</span></div>
-      <div class="terminal reveal">
-        <div class="bar"><i></i><i></i><i></i></div>
-        <div class="line"><span class="ps">ws@ethereum:~$</span> whoami</div>
-        <div class="line">&nbsp;&nbsp;smart contract dude</div>
-        <div class="line"><span class="ps">ws@ethereum:~$</span> contact --list</div>
-        <div class="line">&nbsp;&nbsp;linkedin&nbsp;&nbsp;→ <a href="https://linkedin.com/in/william-schwab-4">linkedin.com/in/william-schwab-4</a></div>
-        <div class="line">&nbsp;&nbsp;github&nbsp;&nbsp;&nbsp;&nbsp;→ <a href="https://github.com/wschwab" rel="me">github.com/wschwab</a></div>
-        <div class="line">&nbsp;&nbsp;twitter&nbsp;&nbsp;&nbsp;→ <a href="https://x.com/wschwab_" rel="me">@wschwab_</a></div>
-        <div class="line">&nbsp;&nbsp;substack&nbsp;&nbsp;→ <a href="https://wschwab.substack.com">wschwab.substack.com</a></div>
-        <div class="line">&nbsp;&nbsp;email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <a id="em" href="#contact" title="click to copy">w.s.schwab4 [at] gmail [dot] com</a><span id="em-ok" class="copy-ok"></span></div>
-        <div class="line"><span class="ps">ws@ethereum:~$</span> credits</div>
-        <div class="line">&nbsp;&nbsp;human&nbsp;→ wschwab</div>
-        <div class="line">&nbsp;&nbsp;agent&nbsp;→ Fable (Claude) — <em>*tips hat back*</em></div>
-        <div class="line"><span class="ps">ws@ethereum:~$</span> <span class="cursor"></span></div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    // assemble the address client-side; no mailto anywhere — click copies instead
-    const em = document.getElementById('em') as HTMLAnchorElement;
-    const emOk = document.getElementById('em-ok')!;
-    const addr = ['w.s', 'schwab4'].join('.') + String.fromCharCode(64) + ['gmail', 'com'].join('.');
-    em.textContent = addr;
-    em.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await navigator.clipboard.writeText(addr);
-      emOk.textContent = ' # copied to clipboard';
-      setTimeout(() => (emOk.textContent = ''), 2000);
-    });
-  </script>
-  <script>
-    (function () {
-      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const cv = document.getElementById('sky') as HTMLCanvasElement;
-      const cx = cv.getContext('2d')!;
-      let W = 0, H = 0;
-      const nodes: { x: number; y: number; vx: number; vy: number; r: number; warm: boolean }[] = [];
-      function size() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
-      size(); addEventListener('resize', size);
-      const N = Math.min(70, Math.floor(innerWidth / 22));
-      for (let i = 0; i < N; i++) nodes.push({
-        x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-        vx: (Math.random() - .5) * .16, vy: (Math.random() - .5) * .16,
-        r: Math.random() * 1.4 + .4, warm: Math.random() < .22,
-      });
-      function draw() {
-        cx.clearRect(0, 0, W, H);
-        for (let i = 0; i < N; i++) {
-          const n = nodes[i];
-          n.x += n.vx; n.y += n.vy;
-          if (n.x < 0 || n.x > W) n.vx *= -1;
-          if (n.y < 0 || n.y > H) n.vy *= -1;
-          for (let j = i + 1; j < N; j++) {
-            const m = nodes[j], dx = n.x - m.x, dy = n.y - m.y, d = dx * dx + dy * dy;
-            if (d < 16900) {
-              const a = (1 - d / 16900) * .10;
-              cx.strokeStyle = 'rgba(92,214,232,' + a + ')';
-              cx.lineWidth = 1;
-              cx.beginPath();
-              // right-angle circuit trace instead of straight line
-              cx.moveTo(n.x, n.y); cx.lineTo(m.x, n.y); cx.lineTo(m.x, m.y);
-              cx.stroke();
-            }
-          }
-          cx.fillStyle = n.warm ? 'rgba(242,169,60,.5)' : 'rgba(92,214,232,.38)';
-          cx.beginPath(); cx.arc(n.x, n.y, n.r, 0, 7); cx.fill();
-        }
-        if (!reduce) requestAnimationFrame(draw);
-      }
-      draw();
-    })();
-  </script>
-</Base>
+  <Page id="writings" title="Writings" folio={5}>
+    <Ln class="writ">
+      <h3><a href={substack.url}>{substack.title}</a></h3>
+      <p>{substack.summary}</p>
+      <Fragment slot="aside">Substack · latest{substack.date && <><br>{substack.date}</>}</Fragment>
+    </Ln>
+    {writing.map((e) => (
+      <Ln class="writ">
+        <h3><a href={e.data.url}>{e.data.title}</a></h3>
+        <p>{e.data.summary}</p>
+        <Fragment slot="aside">{e.data.kind}{e.data.date && <><br>{e.data.date.getUTCFullYear()}</>}</Fragment>
+      </Ln>
+    ))}
+    <Ln>
+      <p class="insertion">(Also on the air: <a href="https://www.youtube.com/watch?v=58eKnYR_EyM">Solidity Fridays</a> livestreams
+        with transmissions11, and the <a href="https://open.spotify.com/episode/2baQnYpheB8ol9Kk9fMUCl">Cat Herders podcast</a> —
+        the samczsun episode.)</p>
+    </Ln>
+    <div class="more">
+      <p><a href="/writing/">The full archive of writings</a></p>
+    </div>
+  </Page>
+</Record>
